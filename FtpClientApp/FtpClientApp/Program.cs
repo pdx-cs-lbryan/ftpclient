@@ -20,6 +20,7 @@ using System.Reflection;
 using System.Security.Principal;
 using System.Net.Sockets;
 using System.Threading;  // password
+using FtpClientApp;
 
 namespace FtpClient
 {
