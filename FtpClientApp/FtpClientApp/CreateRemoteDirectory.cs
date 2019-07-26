@@ -44,18 +44,23 @@ namespace FtpClientApp
 
             //make request
             String remoteDir = this.connection.ServerName + '/' + dir;
-            
+
             //Handle response
+            FtpStatusCode received;
             try
             {
                 FtpWebRequest request = (FtpWebRequest)WebRequest.Create(remoteDir);
                 request.Credentials = new NetworkCredential(this.connection.UserName, this.connection.PassWord);
                 request.Method = WebRequestMethods.Ftp.MakeDirectory;
                 FtpWebResponse response = (FtpWebResponse)request.GetResponse();
+                received = response.StatusCode;
             }
             catch (WebException e)
             {
-                return e.Message;
+                if (e.Message.ToString() == "The remote server returned an error: (550) File unavailable (e.g., file not found, no access).") { 
+                          return "The server sent an error code of 550. The directory may already exist or the file was unavailable due to a lack of access.";
+                }
+                return e.Message.ToString();
             }
             catch (System.UriFormatException e)
             {

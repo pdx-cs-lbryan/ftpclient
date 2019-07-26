@@ -31,7 +31,6 @@ namespace FtpClient
             // Press Ctrl+F5 (or go to Debug > Start Without Debugging) to run your app.
             Console.WriteLine("  Welcome to FTPClient \n");
 
-            bool LetsContinueLoop = true;
             int running = 1;
             String username = "";
             String password = "";
