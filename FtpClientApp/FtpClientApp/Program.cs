@@ -1,6 +1,6 @@
 ﻿/**
- * CS 410 Agile Developement Summer 2019 
- * Team #7 
+ * CS 410 Agile Developement Summer 2019
+ * Team #7
  * Ftp Client Project
  *
  **/
@@ -57,13 +57,13 @@ namespace FtpClient
                      * Use the above info to try making a request to the server
                      * The request should be something like dirsize where only read permissions are necessary
                      * Only matters if the response code indicates success, if so proceed.
-                     * 
-                     * 
+                     *
+                     *
                      * TO IMPLEMENT: Time out
                      * Repeat similar to the above with the request to the server. If the response code
                      * doesn't indicate success, set timeout to true.
-                     * 
-                     * 
+                     *
+                     *
                      * TO IMPLEMENT: Log out
                      * if the input option is set to the log out option, set timeout to false
                      */
@@ -75,6 +75,10 @@ namespace FtpClient
 
                         //TIMEOUT -- probably want to do timeout check here
                     }
+                    //On Logout, clear all user credentials stored
+                   username = "";
+                   password = "";
+                   server = "";
                 }
                 else if (response == "2")
                 {
@@ -100,7 +104,7 @@ namespace FtpClient
             Console.WriteLine("6) Change file permission on Remote Server");
             Console.WriteLine("7) Rename file on Remote Server");
             Console.WriteLine("8) ");
-            Console.WriteLine("9) Exit ftpClient \n");
+            Console.WriteLine("9) Logout from Server \n");
 
         } // end DisplayMenu()
 
@@ -113,9 +117,12 @@ namespace FtpClient
             switch (getAnswer)
             {
                 case "9":
-                    Console.WriteLine(" Not Implemented Yet \n");
-                    //Log out -> set to true
-                    MyAnswer = false;
+                    Console.Clear();
+                    Console.Write(username);
+                    Console.WriteLine(" Logged out from server! \n");
+                    Console.WriteLine(" ########################################### \n");
+                    //Set response to 'true' to logout
+                    MyAnswer = true;
                     break;
                 case "8":
                     Console.WriteLine(" Not Implemented Yet  \n");
