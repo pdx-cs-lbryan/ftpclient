@@ -100,6 +100,14 @@ namespace FtpClientApp
             try
             {
                 FtpWebResponse response = wrapper.getResp();
+                if(response != null)
+                {
+                    if ((int)response.StatusCode >= 300)
+                    {
+                        return "Error - could not create directory";
+                    }
+                }
+                
             }
             catch (WebException e)
             {
