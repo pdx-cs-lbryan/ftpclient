@@ -21,20 +21,21 @@ namespace FtpClientAppTest
         public void directoryAlreadyExistsReturnsMessageSayingItExists()
         {
             var info = A.Fake<ServerConnectionInformation>();
-            var crd = A.Fake<CreateRemoteDirectory>();
-            var server = A.Fake <FtpWebRequest> ();
-
+            var server = A.Fake <FTPTestWrapperAbstract> ();
+            
             info.UserName = "un";
             info.PassWord = "pw";
             info.ServerName = "ftp://localhost";
-
             WebException ex = new WebException(
-                "testmsg", (WebExceptionStatus) FtpStatusCode.ActionNotTakenFileUnavailable);
-          
+                "The remote server returned an error: (550) File unavailable (e.g., file not found, no access).",
+                WebExceptionStatus.ProtocolError);
+            
 
-            A.CallTo(() => crd.getDirectoryName()).Returns("testdir");
-            A.CallTo(() => server.GetResponse()).Throws(ex);
-            String resp = crd.create(crd.getDirectoryName());
+            Console.WriteLine(ex.Message);
+            A.CallTo(() => server.getResp()).Throws(ex);
+            CreateRemoteDirectory crd = new CreateRemoteDirectory(info);
+            String resp = crd.create(server);
+            Console.WriteLine(resp);
             Assert.IsTrue(resp.Equals("The server sent an error code of 550. The directory may already exist or the file was unavailable due to a lack of access."));
 
         }
