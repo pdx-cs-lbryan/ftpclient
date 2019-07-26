@@ -44,20 +44,20 @@ namespace FtpClientApp
 
             //make request
             String remoteDir = this.connection.ServerName + '/' + dir;
-            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(remoteDir);
-            request.Credentials = new NetworkCredential(this.connection.UserName, this.connection.PassWord);
-            request.Method = WebRequestMethods.Ftp.MakeDirectory;
-
+            
             //Handle response
             try
             {
+                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(remoteDir);
+                request.Credentials = new NetworkCredential(this.connection.UserName, this.connection.PassWord);
+                request.Method = WebRequestMethods.Ftp.MakeDirectory;
                 FtpWebResponse response = (FtpWebResponse)request.GetResponse();
             }
             catch (WebException e)
             {
                 return e.Message;
             }
-            catch (UriFormatException e)
+            catch (System.UriFormatException e)
             {
                 return "Poorly formatted URI. Please enter a valid directory name";
             }

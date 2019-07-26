@@ -44,8 +44,9 @@ namespace FtpClient
                 if (response == "1")
                 {
                     //get credentials for user
-                    Console.WriteLine("Enter your FTP server (localhost, an IP address, etc.\n");
+                    Console.WriteLine("Enter your FTP server (localhost, an IP address, etc.) excluding 'ftp://'\n");
                     server = Console.ReadLine();
+                    server = "ftp://" + server;
                     Console.WriteLine("Enter your FTP server username\n");
                     username = Console.ReadLine();
                     Console.WriteLine("Enter your FTP server password\n");
