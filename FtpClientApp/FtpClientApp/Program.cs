@@ -31,7 +31,6 @@ namespace FtpClient
             // Press Ctrl+F5 (or go to Debug > Start Without Debugging) to run your app.
             Console.WriteLine("  Welcome to FTPClient \n");
 
-            bool LetsContinueLoop = true;
             int running = 1;
             String username = "";
             String password = "";
@@ -44,8 +43,9 @@ namespace FtpClient
                 if (response == "1")
                 {
                     //get credentials for user
-                    Console.WriteLine("Enter your FTP server (localhost, an IP address, etc.\n");
+                    Console.WriteLine("Enter your FTP server (localhost, an IP address, etc.) excluding 'ftp://'\n");
                     server = Console.ReadLine();
+                    server = "ftp://" + server;
                     Console.WriteLine("Enter your FTP server username\n");
                     username = Console.ReadLine();
                     Console.WriteLine("Enter your FTP server password\n");
@@ -111,7 +111,7 @@ namespace FtpClient
         public static bool GetResponce(String username, String password, String server)
         {
             string getAnswer = "";
-            bool MyAnswer = true;
+            bool MyAnswer = false;
             getAnswer = Console.ReadLine();
             ServerConnectionInformation conn = new ServerConnectionInformation(username, password, server);
             switch (getAnswer)
@@ -149,8 +149,11 @@ namespace FtpClient
 
 
                     CreateRemoteDirectory createRemDir = new CreateRemoteDirectory(conn);
+                    FtpTestWrapper wrapper = new FtpTestWrapper();
                     String directory = createRemDir.getDirectoryName();
-                    String response = createRemDir.create(directory);
+                    createRemDir.setWrapper(wrapper);
+                    createRemDir.setup(directory);
+                    String response = createRemDir.create(createRemDir.getWrapper());
                     if (response == "success")
                     {
                         Console.Write("Directory Created\n");
@@ -178,10 +181,12 @@ namespace FtpClient
                     break;
                 case "1":
                     Console.WriteLine(" Not Implemented Yet  \n");
+                    MyAnswer = false;
                     //File upload
                     break;
                 default:
                     Console.WriteLine("\n That was not a valid input, Please try again \n");
+                    MyAnswer = false;
                     //File download
                     break;
             }
