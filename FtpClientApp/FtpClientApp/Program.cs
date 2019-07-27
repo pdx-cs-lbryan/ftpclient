@@ -181,6 +181,7 @@ namespace FtpClient
                     //File download
                     Console.WriteLine(" You choose 1, download File, in devl \n");
                     FileDownload RemoteFileDownload = new FileDownload(conn);
+                    MyAnswer = false;
                     break;
                 default:
                     Console.WriteLine("\n That was not a valid input, Please try again \n");

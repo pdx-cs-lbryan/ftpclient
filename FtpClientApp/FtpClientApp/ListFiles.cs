@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
+using System.IO;
 using System.Net;
 
 namespace FtpClientApp
@@ -9,13 +7,25 @@ namespace FtpClientApp
     class ListFiles
     {
         public ListFiles(ServerConnectionInformation myConnection)
-        {
-            Console.WriteLine("\n ServerName:  " + myConnection.ServerName);
-            Console.WriteLine("\n UserName:  " + myConnection.UserName);
-            Console.WriteLine("\n Password:  " + myConnection.PassWord);
+        {   // defaults used for testing
+            //myConnection.ServerName = "ftp://speedtest.tele2.net";
+            //myConnection.UserName = "anonymous";
+            //myConnection.PassWord = "anonymous";
+
+            FtpWebRequest myServerConnectionRequest = (FtpWebRequest)WebRequest.Create(myConnection.ServerName);
+            myServerConnectionRequest.Credentials = new NetworkCredential(myConnection.UserName, myConnection.PassWord);
+
+            myServerConnectionRequest.Method = WebRequestMethods.Ftp.ListDirectoryDetails;
+            FtpWebResponse ServerResponse = (FtpWebResponse)myServerConnectionRequest.GetResponse();
+
+            Stream ServerResponseStream = ServerResponse.GetResponseStream();
+            StreamReader readerObj = new StreamReader(ServerResponseStream);
+            Console.WriteLine(readerObj.ReadToEnd());
+
+            readerObj.Close();
+            ServerResponse.Close();
 
         } // end ListFiles
-   
-        
+           
     } // end class ListFiles
 } // end namespace FtpClientApp
