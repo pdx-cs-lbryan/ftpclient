@@ -6,5 +6,6 @@ namespace FtpClientApp
 {
     class FileDownload
     {
+
     }
 }

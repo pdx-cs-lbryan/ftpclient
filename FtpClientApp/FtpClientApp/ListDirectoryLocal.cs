@@ -44,7 +44,7 @@ namespace FtpClientApp
 
             while (!found)
             {
-                Console.WriteLine("Enter a directory");
+                Console.WriteLine("Enter an absolute path to directory:");
                 dir = Console.ReadLine();
                 if (File.Exists(dir) || Directory.Exists(dir))
                 {
