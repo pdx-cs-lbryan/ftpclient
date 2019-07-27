@@ -6,15 +6,16 @@ using System.Net;
 
 namespace FtpClientApp
 {
-    class FileDownload
+    class ListFiles
     {
-        public FileDownload(ServerConnectionInformation myConnection)
+        public ListFiles(ServerConnectionInformation myConnection)
         {
             Console.WriteLine("\n ServerName:  " + myConnection.ServerName);
             Console.WriteLine("\n UserName:  " + myConnection.UserName);
             Console.WriteLine("\n Password:  " + myConnection.PassWord);
 
-        } // end FileDownload()
-
-    } // end class FileDownload
+        } // end ListFiles
+   
+        
+    } // end class ListFiles
 } // end namespace FtpClientApp

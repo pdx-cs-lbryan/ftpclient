@@ -31,7 +31,7 @@ namespace FtpClient
             // Press Ctrl+F5 (or go to Debug > Start Without Debugging) to run your app.
             Console.WriteLine("  Welcome to FTPClient \n");
 
-            bool LetsContinueLoop = true;
+            //bool LetsContinueLoop = true;
             int running = 1;
             String username = "";
             String password = "";
@@ -146,8 +146,6 @@ namespace FtpClient
                 case "4":
                     Console.WriteLine(" You choose 4, Create Directory:  \n");
                     //create remote directory
-
-
                     CreateRemoteDirectory createRemDir = new CreateRemoteDirectory(conn);
                     String directory = createRemDir.getDirectoryName();
                     String response = createRemDir.create(directory);
@@ -168,21 +166,24 @@ namespace FtpClient
                     MyAnswer = false;
                     break;
                 case "3":
-                    Console.WriteLine(" Not Implemented Yet \n");
+                    Console.WriteLine(" You choose 3, List Directories, in devl \n");
                     //list remote directory
+                    ListFiles ListRemoteFiles = new ListFiles(conn);
                     MyAnswer = false;
                     break;
                 case "2":
-                    Console.WriteLine(" Not Implemented Yet \n");
+                    //File upload
+                    Console.WriteLine(" You choose 2, Upload File, in devl \n");
+                    FileUpload RemoteFileUPload = new FileUpload(conn);
                     MyAnswer = false;
                     break;
                 case "1":
-                    Console.WriteLine(" Not Implemented Yet  \n");
-                    //File upload
+                    //File download
+                    Console.WriteLine(" You choose 1, download File, in devl \n");
+                    FileDownload RemoteFileDownload = new FileDownload(conn);
                     break;
                 default:
                     Console.WriteLine("\n That was not a valid input, Please try again \n");
-                    //File download
                     break;
             }
             return MyAnswer;
