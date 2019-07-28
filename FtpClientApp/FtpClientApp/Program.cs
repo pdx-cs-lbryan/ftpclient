@@ -131,6 +131,25 @@ namespace FtpClient
                 case "7":
                     Console.WriteLine(" Not Implemented Yet  \n");
                     //Rename remote file
+                    RenameFileRemote renameRemote = new RenameFileRemote(conn);
+                    Console.WriteLine("Enter the file you wish to rename: \n");
+                    String fileRename;
+                    fileRename = Console.ReadLine();
+                    Console.WriteLine("Enter the name which you wish to rename the file with: \n");
+                    String newName;
+                    newName = Console.ReadLine();
+                    String response2 = renameRemote.RenameFileOnRemoteServer(fileRename,newName);
+                    if (response2 == "success")
+                    {
+                        Console.Write("File renamed\n");
+                    }
+                    else
+                    {
+                        Console.Write("Could not rename file due to an error.\n" + response2 + "\n");
+                    }
+
+                    MyAnswer = false;
+                    break;
                     MyAnswer = false;
                     break;
                 case "6":
