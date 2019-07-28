@@ -1,5 +1,5 @@
 ﻿/**
- * CS 410 Agile Developement Summer 2019
+ * CS 410/510 Agile Developement Summer 2019
  * Team #7
  * Ftp Client Project
  *
@@ -204,7 +204,6 @@ namespace FtpClient
                 default:
                     Console.WriteLine("\n That was not a valid input, Please try again \n");
                     MyAnswer = false;
-
                     break;
             }
             return MyAnswer;

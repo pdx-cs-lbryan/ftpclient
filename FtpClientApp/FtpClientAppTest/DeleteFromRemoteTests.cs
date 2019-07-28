@@ -21,15 +21,15 @@ namespace FtpClientAppTest
         public void FileExistsReturnSuccess()
         {
             var info = A.Fake<ServerConnectionInformation>();
-            var server = A.Fake<FTPTestWrapperAbstract>();
-
+            var server = A.Fake <FTPTestWrapperAbstract> ();
+            
             info.UserName = "un";
             info.PassWord = "pw";
             info.ServerName = "ftp://localhost";
             WebException ex = new WebException(
                 "The remote server returned success (file found)",
                 WebExceptionStatus.ProtocolError);
-
+            
 
             Console.WriteLine(ex.Message);
             A.CallTo(() => server.getResp()).Throws(ex);
@@ -57,6 +57,6 @@ namespace FtpClientAppTest
             String resp = crd.create(server);
             Assert.IsTrue(resp.Equals("success"));
         }
-
+        
     }
 }
