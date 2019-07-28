@@ -31,7 +31,6 @@ namespace FtpClient
             // Press Ctrl+F5 (or go to Debug > Start Without Debugging) to run your app.
             Console.WriteLine("  Welcome to FTPClient \n");
 
-            //bool LetsContinueLoop = true;
             int running = 1;
             String username = "";
             String password = "";
@@ -44,8 +43,9 @@ namespace FtpClient
                 if (response == "1")
                 {
                     //get credentials for user
-                    Console.WriteLine("Enter your FTP server (localhost, an IP address, etc.\n");
+                    Console.WriteLine("Enter your FTP server (localhost, an IP address, etc.) excluding 'ftp://'\n");
                     server = Console.ReadLine();
+                    server = "ftp://" + server;
                     Console.WriteLine("Enter your FTP server username\n");
                     username = Console.ReadLine();
                     Console.WriteLine("Enter your FTP server password\n");
@@ -111,7 +111,7 @@ namespace FtpClient
         public static bool GetResponce(String username, String password, String server)
         {
             string getAnswer = "";
-            bool MyAnswer = true;
+            bool MyAnswer = false;
             getAnswer = Console.ReadLine();
             ServerConnectionInformation conn = new ServerConnectionInformation(username, password, server);
             switch (getAnswer)
@@ -139,16 +139,34 @@ namespace FtpClient
                     MyAnswer = false;
                     break;
                 case "5":
-                    Console.WriteLine(" Not Implemented Yet  \n");
+                    Console.WriteLine(" You chose 5, Delete File From Remote:  \n");
                     //Delete file on remote server
+                    DeleteFromRemote deleteRemote = new DeleteFromRemote(conn);
+                    Console.WriteLine("Enter the file you wish to delete: \n");
+                    String file;
+                    file = Console.ReadLine();
+                    String response1 = deleteRemote.DeleteFileOnRemoteServer(file);
+                    if (response1 == "success")
+                    {
+                        Console.Write("File deleted\n");
+                    }
+                    else
+                    {
+                        Console.Write("Could not delete file due to an error.\n" + response1 + "\n");
+                    }
+
                     MyAnswer = false;
                     break;
                 case "4":
-                    Console.WriteLine(" You choose 4, Create Directory:  \n");
+                    Console.WriteLine(" You chose 4, Create Directory:  \n");
                     //create remote directory
+
                     CreateRemoteDirectory createRemDir = new CreateRemoteDirectory(conn);
+                    FtpTestWrapper wrapper = new FtpTestWrapper();
                     String directory = createRemDir.getDirectoryName();
-                    String response = createRemDir.create(directory);
+                    createRemDir.setWrapper(wrapper);
+                    createRemDir.setup(directory);
+                    String response = createRemDir.create(createRemDir.getWrapper());
                     if (response == "success")
                     {
                         Console.Write("Directory Created\n");
@@ -185,6 +203,8 @@ namespace FtpClient
                     break;
                 default:
                     Console.WriteLine("\n That was not a valid input, Please try again \n");
+                    MyAnswer = false;
+
                     break;
             }
             return MyAnswer;
