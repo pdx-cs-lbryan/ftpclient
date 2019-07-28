@@ -13,7 +13,13 @@ Git clone the project into Visual Studio IDE and
 run the code from there. 
 
 
-Or from the command line, compile the following files:
+Or from the command line:
+
+```
+cd ftpclient/FtpClientApp/FtpClientApp
+```
+
+ compile the following files:
 
 ```
 $ csc *.cs
