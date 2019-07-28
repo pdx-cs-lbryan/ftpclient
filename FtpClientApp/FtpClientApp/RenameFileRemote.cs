@@ -33,7 +33,6 @@ namespace FtpClientApp
             try{
                 FtpWebRequest request = (FtpWebRequest)WebRequest.Create(remoteFile);
                 request.Credentials = new NetworkCredential(this.connection.UserName, this.connection.PassWord);
-                //request.Method = WebRequestMethods.Ftp.DeleteFile;
                 request.Method = WebRequestMethods.Ftp.Rename;
                 request.RenameTo = newName;
  
