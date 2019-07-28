@@ -36,7 +36,7 @@ namespace FtpClientAppTest
             DeleteFromRemote crd = new DeleteFromRemote(info);
             String resp = crd.create(server);
             Console.WriteLine(resp);
-            Assert.IsTrue(resp.Equals("The server sent an error code of 550. The file may not exist."));
+            Assert.IsTrue(resp.Equals("File successfully deleted."));
 
         }
 
@@ -55,7 +55,7 @@ namespace FtpClientAppTest
             A.CallTo(() => server.getResp()).Returns(a);
             DeleteFromRemote crd = new DeleteFromRemote(info);
             String resp = crd.create(server);
-            Assert.IsTrue(resp.Equals("success"));
+            Assert.IsTrue(resp.Equals("The server sent an error code of 550. The file may not exist."));
         }
         
     }

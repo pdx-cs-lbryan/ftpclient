@@ -42,7 +42,7 @@ namespace FtpClientApp
             catch(WebException e){
                 if (e.Message.ToString().Equals("The remote server returned an error: (550) File unavailable (e.g., file not found, no access)."))
                 {
-                    return "The server sent an error code of 550. The file may no exist.";
+                    return "The server sent an error code of 550. The file may not exist.";
                 }
                 return e.Message.ToString();
             }
