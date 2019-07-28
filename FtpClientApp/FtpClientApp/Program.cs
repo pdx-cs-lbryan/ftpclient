@@ -145,13 +145,21 @@ namespace FtpClient
                     Console.WriteLine("Enter the file you wish to delete: \n");
                     String file;
                     file = Console.ReadLine();
-                    deleteRemote.DeleteFileOnRemoteServer(file);
+                    String response1 = deleteRemote.DeleteFileOnRemoteServer(file);
+                    if (response1 == "success")
+                    {
+                        Console.Write("File deleted\n");
+                    }
+                    else
+                    {
+                        Console.Write("Could not delete file due to an error.\n" + response1 + "\n");
+                    }
+
                     MyAnswer = false;
                     break;
                 case "4":
                     Console.WriteLine(" You chose 4, Create Directory:  \n");
                     //create remote directory
-
 
                     CreateRemoteDirectory createRemDir = new CreateRemoteDirectory(conn);
                     FtpTestWrapper wrapper = new FtpTestWrapper();
