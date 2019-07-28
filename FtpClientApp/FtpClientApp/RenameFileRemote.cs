@@ -65,7 +65,7 @@ namespace FtpClientApp
                 {
                     if ((int)response.StatusCode >= 300)
                     {
-                        return "Error - could not delete file";
+                        return "Error - could not rename file";
                     }
                 }
                 

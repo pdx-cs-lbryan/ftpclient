@@ -129,7 +129,6 @@ namespace FtpClient
                     MyAnswer = false;
                     break;
                 case "7":
-                    Console.WriteLine(" Not Implemented Yet  \n");
                     //Rename remote file
                     RenameFileRemote renameRemote = new RenameFileRemote(conn);
                     Console.WriteLine("Enter the file you wish to rename: \n");
