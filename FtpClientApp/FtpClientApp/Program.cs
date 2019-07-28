@@ -150,8 +150,6 @@ namespace FtpClient
 
                     MyAnswer = false;
                     break;
-                    MyAnswer = false;
-                    break;
                 case "6":
                     Console.WriteLine(" Not Implemented Yet  \n");
                     //Change file permissions
