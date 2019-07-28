@@ -1,5 +1,5 @@
 ﻿/**
- * CS 410 Agile Developement Summer 2019
+ * CS 410/510 Agile Developement Summer 2019
  * Team #7
  * Ftp Client Project
  *
@@ -139,12 +139,17 @@ namespace FtpClient
                     MyAnswer = false;
                     break;
                 case "5":
-                    Console.WriteLine(" Not Implemented Yet  \n");
+                    Console.WriteLine(" You chose 5, Delete File From Remote:  \n");
                     //Delete file on remote server
+                    DeleteFromRemote deleteRemote = new DeleteFromRemote(conn);
+                    Console.WriteLine("Enter the file you wish to delete: \n");
+                    String file;
+                    file = Console.ReadLine();
+                    deleteRemote.DeleteFileOnRemoteServer(file);
                     MyAnswer = false;
                     break;
                 case "4":
-                    Console.WriteLine(" You choose 4, Create Directory:  \n");
+                    Console.WriteLine(" You chose 4, Create Directory:  \n");
                     //create remote directory
 
 
