@@ -16,7 +16,7 @@ run the code from there.
 Or from the command line:
 
 ```
-cd ftpclient/FtpClientApp/FtpClientApp
+$ cd ftpclient/FtpClientApp/FtpClientApp
 ```
 
  compile the following files:
