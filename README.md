@@ -1,7 +1,7 @@
 # FTP Client
 
-Recreation of CS410/510 Agile Summer 2019 Group 7 FTP Repository.
-**Please see here for the original repository and its commit history**: https://github.com/mbillett/ftpClient
+Recreation of CS410/510 Agile Summer 2019 Group 7 FTP Repository.<br>
+**Please visit this link for the original repository and its commit history**: https://github.com/mbillett/ftpClient
 
 Makes use of:<br>
 https://fakeiteasy.github.io/<br>
