@@ -1,39 +1,40 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Net;
 
 namespace FtpClientApp
 {
-    public class DeleteFromRemote
-    {
+   public class RenameFileRemote
+   {
+       private ServerConnectionInformation connection;
 
-        private ServerConnectionInformation connection;
-        private FtpWebRequest request;
+       private FtpWebRequest request;
 
-        private FtpTestWrapper wrapper;
-    
-        public DeleteFromRemote(ServerConnectionInformation toUse)
-        {
-            this.connection = toUse;
-        }
-        public void setRequest(FtpWebRequest req)
-        {
-            this.request = req;
-        }
+       private FtpTestWrapper wrapper;
 
-        public void setWrapper(FtpTestWrapper wrapper)
-        {
-            this.wrapper = wrapper;
-        }
+       public RenameFileRemote(ServerConnectionInformation toUse)
+       {
+           this.connection = toUse;
+       }
+       public void setRequest(FtpWebRequest req)
+       {
+           this.request = req;
+       }
 
-        public String DeleteFileOnRemoteServer(String file)
+       public void setWrapper(FtpTestWrapper wrapper)
+       {
+           this.wrapper = wrapper;
+       }
+
+       public String RenameFileOnRemoteServer(String file, String newName)
         {
             String remoteFile = this.connection.ServerName + '/' + file;
             try{
                 FtpWebRequest request = (FtpWebRequest)WebRequest.Create(remoteFile);
                 request.Credentials = new NetworkCredential(this.connection.UserName, this.connection.PassWord);
-                request.Method = WebRequestMethods.Ftp.DeleteFile;
+                request.Method = WebRequestMethods.Ftp.Rename;
+                request.RenameTo = newName;
  
                 FtpWebResponse response = (FtpWebResponse) request.GetResponse();
                 response.Close();
@@ -64,7 +65,7 @@ namespace FtpClientApp
                 {
                     if ((int)response.StatusCode >= 300)
                     {
-                        return "Error - could not delete file";
+                        return "Error - could not rename file";
                     }
                 }
                 
@@ -85,6 +86,6 @@ namespace FtpClientApp
             return "success";
 
         }
-
-    }
+        
+   }
 }
