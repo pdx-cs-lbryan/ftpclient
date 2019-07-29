@@ -10,7 +10,7 @@ namespace FtpClientApp
 
         public ChangePermissions(ServerConnectionInformation conn)
         {
-
+            this.connection = conn;
         }
 
         public String getDir()
@@ -70,7 +70,17 @@ namespace FtpClientApp
             } catch(FluentFTP.FtpAuthenticationException)
             {
                 return "Server Validation Failed\n";
-            } 
+            } catch (ArgumentException)
+            {
+                return "The Path was Blank";
+            } catch (FluentFTP.FtpCommandException e)
+            {
+                if(e.Message.Equals("Command not implemented for that parameter"))
+                {
+                    return "504 Error from Server: This Server Has Not Implemented the CHMOD command.\n";
+                }
+                return e.Message;
+            }
         }
     }
 }
