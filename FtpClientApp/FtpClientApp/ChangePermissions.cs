@@ -17,7 +17,7 @@ namespace FtpClientApp
      * Unfortunately, I have only been able to confirm that windows will acknowledge the command and give a 504 error,
      * along the functionality of my code via unit tests.
      */
-    class ChangePermissions
+    public class ChangePermissions
     {
         private ServerConnectionInformation connection;
 
@@ -99,7 +99,7 @@ namespace FtpClientApp
 
         //Main class to change the permissions. Invokes the wrapper's run method
         //and returns success. If an exception arises, returns an appropriate error message.
-        public String change(FluentWrapper wrapper)
+        public String change(FTPTestWrapperAbstract wrapper)
         {
             //Note: This uses FluentFTP as the Microsoft library does not enable the use of SITE commands.
             //When I discussed this with the team, people wanted to use a combination of both libraries than switch
