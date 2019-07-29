@@ -86,7 +86,9 @@ namespace FtpClientApp
                 {
                     FluentFTP.FtpClient client = new FluentFTP.FtpClient(this.connection.ServerName);
                     client.Credentials = new System.Net.NetworkCredential(this.connection.UserName, this.connection.PassWord);
+                    client.Connect();
                     client.Chmod(this.path, this.permission);
+                    client.Disconnect();
                 }
                 catch (Exception e)
                 {

@@ -153,9 +153,11 @@ namespace FtpClient
                     Console.WriteLine("You chose - 6: Change Permissions. Please Note that Changing Permissions Requires an *NIX Server supporting 'SITE CHMOD'. Windows Servers are not supported.");
                     //Change file permissions
                     ChangePermissions perms = new ChangePermissions(conn);
-                    String dir = perms.getDir();
-                    int value = perms.getPerms();
-                    String permresponse = perms.change(dir, value);
+                    FluentWrapper permwrapper = new FluentWrapper();
+                    permwrapper.setConn(conn);
+                    perms.setDir(permwrapper);
+                    perms.setPerms(permwrapper);
+                    String permresponse = perms.change(permwrapper);
 
                     if (permresponse.Equals("Server Validation Failed\n") == true) {
                         Console.WriteLine("\nServer Validation Failed - Logging out");
@@ -199,9 +201,9 @@ namespace FtpClient
                     //create remote directory
 
                     CreateRemoteDirectory createRemDir = new CreateRemoteDirectory(conn);
-                    FtpTestWrapper wrapper = new FtpTestWrapper();
+                    FtpTestWrapper newdirwrapper = new FtpTestWrapper();
                     String directory = createRemDir.getDirectoryName();
-                    createRemDir.setWrapper(wrapper);
+                    createRemDir.setWrapper(newdirwrapper);
                     createRemDir.setup(directory);
                     String changeresponse = createRemDir.create(createRemDir.getWrapper());
                     if (changeresponse == "success")

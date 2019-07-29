@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Text;
 
 namespace FtpClientApp
@@ -13,7 +14,7 @@ namespace FtpClientApp
      * Several hours were spent attempting to get the program to compile and build, but
      * I could not find the tools necessary to do so. Significant time also went into 
      * attempting to connect to a server running inside a linux VM on a windows machine.
-     * Unfortunately, I have only been able to confirm that windows will give a 504 error,
+     * Unfortunately, I have only been able to confirm that windows will acknowledge the command and give a 504 error,
      * along the functionality of my code via unit tests.
      */
     class ChangePermissions
@@ -31,22 +32,22 @@ namespace FtpClientApp
 
         /*
          * A function which gets a path to use for changing permissions from the user
-         * returned as a string.
+         * and sets it as the passed in wrapper's path.
          */
-        public String getDir()
+        public void setDir(FluentWrapper wrapper)
         {
             Console.WriteLine("\nEnter Path from Root of File to Change Permissions For : ");
             String dir = Console.ReadLine();
-            return dir;
+            wrapper.setPath(dir);
         }
 
         /**
          * This function is used to get permissions from the user to set.
          * The console prints information to the user on the allowed format
          * get the user's input, verifies it for correctness, and then
-         * returns the input as an int.
+         * sets it as the passed in wrapper's permissions.
          */
-        public int getPerms()
+        public void setPerms(FluentWrapper wrapper)
         {
             Console.WriteLine("\nPlease enter the 3 digit numeric value of the permissions to set.");
             Console.WriteLine("Accept values for each digit are 0-7.\nThe leftmost digit is for the user.\nThe center digit is for the group.\nThe right most digit is for Others.");
@@ -68,7 +69,7 @@ namespace FtpClientApp
                 }
             }
 
-            return int.Parse(value);
+            wrapper.setPermission(int.Parse(value));
         }
 
         public bool checkInput(String value)
@@ -96,10 +97,9 @@ namespace FtpClientApp
             return ready;
         }
 
-
-
-
-        public String change(String dir, int perms)
+        //Main class to change the permissions. Invokes the wrapper's run method
+        //and returns success. If an exception arises, returns an appropriate error message.
+        public String change(FluentWrapper wrapper)
         {
             //Note: This uses FluentFTP as the Microsoft library does not enable the use of SITE commands.
             //When I discussed this with the team, people wanted to use a combination of both libraries than switch
@@ -107,7 +107,7 @@ namespace FtpClientApp
             try
             {
                 //Open connection and make change
-                
+                wrapper.runFluent(0);
                 return "success";
 
                 //Handle Exceptions thrown by FluentFTP
@@ -126,7 +126,20 @@ namespace FtpClientApp
                 return e.Message;
             }catch (System.Net.Sockets.SocketException)
             {
-                return "Error when attempting to connect - Socket connection refused."
+                return "Error when attempting to connect - Socket connection refused.";
+            }
+            catch (WebException e)
+            {
+
+                if (e.Message.ToString().Equals("The remote server returned an error: (550) File unavailable (e.g., file not found, no access)."))
+                {
+                    return "The server sent an error code of 550. The file may not exist or file was unavailable due to a lack of access.";
+                }
+                return e.Message.ToString();
+            }
+            catch (System.UriFormatException e)
+            {
+                return "Poorly formatted URI. Please enter a valid path.";
             }
         }
     }
