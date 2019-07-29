@@ -150,8 +150,11 @@ namespace FtpClient
                     MyAnswer = false;
                     break;
                 case "6":
-                    Console.WriteLine(" Not Implemented Yet  \n");
+                    Console.WriteLine("You chose - 6: Change Permissions. Please Note that Changing Permissions Requires an *NIX Server supporting 'SITE CHMOD'.");
                     //Change file permissions
+                    ChangePermissions perms = new ChangePermissions(conn);
+                    String dir = perms.getDir();
+                    int value = perms.getPerms();
                     MyAnswer = false;
                     break;
                 case "5":
