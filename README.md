@@ -7,7 +7,7 @@ https://fakeiteasy.github.io/<br>
 Copyright (c) FakeItEasy contributors. (fakeiteasy@hagne.se)<br>
 Licence: https://github.com/FakeItEasy/FakeItEasy/blob/master/License.txt<br><br>
 https://github.com/robinrodricks/FluentFTP<br>
-Copyright (c) 2015 Robin Rodricks and FluentFTP Contributors
+Copyright (c) 2015 Robin Rodricks and FluentFTP Contributors<br>
 License: https://github.com/robinrodricks/FluentFTP/blob/master/LICENSE.TXT
 
 ## Building and Running
