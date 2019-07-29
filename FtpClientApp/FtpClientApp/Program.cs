@@ -103,7 +103,7 @@ namespace FtpClient
             Console.WriteLine("5) Delete file on Remote Server");
             Console.WriteLine("6) Change file permission on Remote Server");
             Console.WriteLine("7) Rename file on Remote Server");
-            Console.WriteLine("8) ");
+            Console.WriteLine("8) List Files Local");
             Console.WriteLine("9) Logout from Server \n");
 
         } // end DisplayMenu()
@@ -125,7 +125,8 @@ namespace FtpClient
                     MyAnswer = true;
                     break;
                 case "8":
-                    Console.WriteLine(" Not Implemented Yet  \n");
+                    ListDirectoryLocal list = new ListDirectoryLocal();
+                    list.ListDirectory();
                     MyAnswer = false;
                     break;
                 case "7":
