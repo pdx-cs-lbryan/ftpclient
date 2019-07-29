@@ -223,8 +223,18 @@ namespace FtpClient
                     MyAnswer = false;
                     break;
                 case "3":
-                    Console.WriteLine(" Not Implemented Yet \n");
-                    //list remote directory
+                    Console.WriteLine(" You chose 3, List Files In Directory:  \n");
+                    ListFiles listFiles = new ListFiles(conn);
+                    String response3 = listFiles.ListFilesOnRemoteServer();
+                    if (response3 == "success")
+                    {
+                        Console.Write("Success: These are the files in the directory: \n");
+                    }
+                    else
+                    {
+                        Console.Write("Error: Can not list files in current directory. \n" + response3 + "\n");
+                    }
+
                     MyAnswer = false;
                     break;
                 case "2":
@@ -232,7 +242,19 @@ namespace FtpClient
                     MyAnswer = false;
                     break;
                 case "1":
-                    Console.WriteLine(" Not Implemented Yet  \n");
+                      //File download
+                    Console.WriteLine(" You choose 1, download File, in devl \n");
+                    FileDownload RemoteFileDownload = new FileDownload(conn);
+                    String response4 = RemoteFileDownload.FileDownloadFromRemote(conn);
+                    if (response4 == "success")
+                    {
+                        Console.Write("File downloaded!\n");
+                    }
+                    else
+                    {
+                        Console.Write("Error: Could not download file.\n" + response4 + "\n");
+                    }
+
                     MyAnswer = false;
                     //File upload
                     break;
