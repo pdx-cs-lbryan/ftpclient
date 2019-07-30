@@ -126,7 +126,7 @@ namespace FtpClient
                     break;
                 case "8":
                     ListDirectoryLocal list = new ListDirectoryLocal();
-                    list.ListDirectory();
+                    bool result = list.ListDirectory();
                     MyAnswer = false;
                     break;
                 case "7":

@@ -7,18 +7,29 @@ namespace FtpClientApp
 {
     class ListDirectoryLocal
     {
-        public void ListDirectory()
+        public bool ListDirectory()
         {
-            string dir = GetUserInputFileOrDirectory();
+            string Dir = @"c:\";
+            bool success=false;
+            Console.Clear();
+
+            //get user input
+            Console.WriteLine("Enter an absolute path to directory:");
+            Dir = Console.ReadLine();
+
+            //check the dir exsists
+            if (!Directory.Exists(Dir))
+            {
+                Console.WriteLine("Directory does not exsist.");
+                return success;
+            }
+
             Console.WriteLine("\n");
 
-            if (File.Exists(dir))
+            //check again if somehow it got deleted since initial check
+            if (Directory.Exists(Dir))
             {
-                ListFile(dir);
-            }
-            else if (Directory.Exists(dir))
-            {
-                string[] files = Directory.GetFiles(dir);
+                string[] files = Directory.GetFiles(Dir);
                 foreach (string fileName in files)
                 {
                     ListFile(fileName);
@@ -26,9 +37,13 @@ namespace FtpClientApp
             }
             else
             {
-                Console.WriteLine("{0} is not a valid file or directory", dir);
+                Console.WriteLine("{0} is not a valid file or directory", Dir);
+                return success;
             }
 
+            //if reached here it was successful
+            success = true;
+            return success;
         }
         public void ListFile(string file)
         {
@@ -36,26 +51,6 @@ namespace FtpClientApp
             FileAttributes attributes = info.Attributes;
             DateTime creationTime = info.CreationTime;
             Console.WriteLine("{2:-15} {0:100}\n    {3:-15} {1:30}\n", file, creationTime.ToString("f"), "File:", "Date Created:");
-        }
-        public string GetUserInputFileOrDirectory()
-        {
-            string dir = @"c:\";
-            bool found = false;
-
-            while (!found)
-            {
-                Console.WriteLine("Enter an absolute path to directory:");
-                dir = Console.ReadLine();
-                if (File.Exists(dir) || Directory.Exists(dir))
-                {
-                    found = true;
-                }
-                else
-                {
-                    Console.WriteLine("Sorry that is not a directory or file\n");
-                }
-            }
-            return dir;
         }
     }
 }
