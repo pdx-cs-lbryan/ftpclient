@@ -5,7 +5,7 @@ using System.Text;
 
 namespace FtpClientApp
 {
-    class ListDirectoryLocal
+    public class ListDirectoryLocal
     {
         public bool ListDirectory(string Dir)
         {
