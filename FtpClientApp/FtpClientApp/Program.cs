@@ -154,9 +154,32 @@ namespace FtpClient
                     MyAnswer = false;
                     break;
                 case "6":
-                    Console.WriteLine(" Not Implemented Yet  \n");
+                    Console.WriteLine("You chose - 6: Change Permissions. Please Note that Changing Permissions Requires an *NIX Server supporting 'SITE CHMOD'. Windows Servers are not supported.");
                     //Change file permissions
-                    MyAnswer = false;
+                    ChangePermissions perms = new ChangePermissions(conn);
+                    FluentWrapper permwrapper = new FluentWrapper();
+                    permwrapper.setConn(conn);
+                    perms.setDir(permwrapper);
+                    perms.setPerms(permwrapper);
+                    String permresponse = perms.change(permwrapper);
+
+                    if (permresponse.Equals("Server Validation Failed\n") == true) {
+                        Console.WriteLine("\nServer Validation Failed - Logging out");
+                        MyAnswer = true;
+                        
+                    } else
+                    {
+                        if(permresponse.Equals("success"))
+                        {
+                            Console.WriteLine("Permissions Changed");
+                        } else
+                        {
+                            Console.WriteLine("Could Not Change Permissions due to Error:");
+                            Console.WriteLine(permresponse);
+                        }
+                        
+                        MyAnswer = false;
+                    }
                     break;
                 case "5":
                     Console.WriteLine(" You chose 5, Delete File From Remote:  \n");
@@ -182,16 +205,16 @@ namespace FtpClient
                     //create remote directory
 
                     CreateRemoteDirectory createRemDir = new CreateRemoteDirectory(conn);
-                    FtpTestWrapper wrapper = new FtpTestWrapper();
+                    FtpTestWrapper newdirwrapper = new FtpTestWrapper();
                     String directory = createRemDir.getDirectoryName();
-                    createRemDir.setWrapper(wrapper);
+                    createRemDir.setWrapper(newdirwrapper);
                     createRemDir.setup(directory);
-                    String response = createRemDir.create(createRemDir.getWrapper());
-                    if (response == "success")
+                    String changeresponse = createRemDir.create(createRemDir.getWrapper());
+                    if (changeresponse == "success")
                     {
                         Console.Write("Directory Created\n");
                     }
-                    else if (response == "disconnect")
+                    else if (changeresponse == "disconnect")
                     {
                         //If lost connection to server, log out
                         MyAnswer = true;
@@ -199,7 +222,7 @@ namespace FtpClient
                     }
                     else
                     {
-                        Console.Write("Could not create directory due to an error.\n" + response + "\n");
+                        Console.Write("Could not create directory due to an error.\n" + changeresponse + "\n");
                     }
                     MyAnswer = false;
                     break;

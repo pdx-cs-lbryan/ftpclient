@@ -26,12 +26,12 @@ namespace FtpClientApp
         public string PassWord
         {
             get { return passWord; }
-            set => passWord = value;
+            set { passWord = value; }
         }
         public string ServerName
         {
             get { return serverName; }
-            set => serverName = value;
+            set { serverName = value; }
         }
 
         public ServerConnectionInformation()
