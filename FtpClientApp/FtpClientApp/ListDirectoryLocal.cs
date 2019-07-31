@@ -7,16 +7,10 @@ namespace FtpClientApp
 {
     class ListDirectoryLocal
     {
-        public bool ListDirectory()
+        public bool ListDirectory(string Dir)
         {
-            string Dir = @"c:\";
             bool success=false;
             Console.Clear();
-
-            //get user input
-            Console.WriteLine("Enter an absolute path to directory:");
-            Dir = Console.ReadLine();
-
             //check the dir exsists
             if (!Directory.Exists(Dir))
             {
@@ -24,11 +18,16 @@ namespace FtpClientApp
                 return success;
             }
 
-            Console.WriteLine("\n");
-
             //check again if somehow it got deleted since initial check
             if (Directory.Exists(Dir))
             {
+                Console.WriteLine("Directories: \n");
+                string[] directories = Directory.GetDirectories(Dir);
+                foreach (string directory in directories)
+                {
+                    ListFile(directory);
+                }
+                Console.WriteLine("\nFiles: \n");
                 string[] files = Directory.GetFiles(Dir);
                 foreach (string fileName in files)
                 {
@@ -50,7 +49,7 @@ namespace FtpClientApp
             FileInfo info = new FileInfo(file);
             FileAttributes attributes = info.Attributes;
             DateTime creationTime = info.CreationTime;
-            Console.WriteLine("{2:-15} {0:100}\n    {3:-15} {1:30}\n", file, creationTime.ToString("f"), "File:", "Date Created:");
+            Console.WriteLine("{2:-15} {0:100}\n    {3:-15} {1:30}\n", file, creationTime.ToString("f"), "Name:", "Date Created:");
         }
     }
 }
