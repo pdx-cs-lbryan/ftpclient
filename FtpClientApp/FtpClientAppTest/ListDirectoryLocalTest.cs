@@ -10,7 +10,7 @@ namespace FtpClientAppTest
     using System.Net;
 
     [TestClass]
-    class ListDirectoryLocalTest
+    public class ListDirectoryLocalTest
     {
         [TestMethod]
         public void ListDirectorySuccess()
