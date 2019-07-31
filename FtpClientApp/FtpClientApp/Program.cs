@@ -232,7 +232,7 @@ namespace FtpClient
                     }
                     else
                     {
-                        Console.Write("Could not Upload file due to above error.\n \n");
+                        Console.Write("Could not Upload file.\n" + response_file + "\n");
                         MyAnswer = true;
                         break;
                     }
