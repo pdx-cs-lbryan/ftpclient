@@ -10,7 +10,7 @@ namespace FtpClientApp
         public bool ListDirectory(string Dir)
         {
             bool success=false;
-            Console.Clear();
+
             //check the dir exsists
             if (!Directory.Exists(Dir))
             {
