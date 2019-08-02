@@ -131,7 +131,6 @@ namespace FtpClient
                     Console.WriteLine("Enter an absolute path to directory:");
                     string Dir = Console.ReadLine();
                     bool result = list.ListDirectory(Dir);
-                    conn.Save();     
                     MyAnswer = false;
                     break;
                 case "7":
