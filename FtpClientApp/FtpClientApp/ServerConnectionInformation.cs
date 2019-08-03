@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.IO;
+using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace FtpClientApp
 {
@@ -12,6 +11,7 @@ namespace FtpClientApp
         private string userName;
         private string passWord;
         private string serverName;
+        private readonly string salt = "JEcv4Wqii5t";
         #endregion
 
         #region Public Declarations
@@ -26,12 +26,12 @@ namespace FtpClientApp
         public string PassWord
         {
             get { return passWord; }
-            set => passWord = value;
+            set { passWord = value; }
         }
         public string ServerName
         {
             get { return serverName; }
-            set => serverName = value;
+            set { serverName = value; }
         }
 
         public ServerConnectionInformation()
@@ -47,10 +47,47 @@ namespace FtpClientApp
             this.passWord = pass;
             this.serverName = server;
         }
+
+        public void Save()
+        {
+            Console.WriteLine(Directory.GetCurrentDirectory());
+            string path = Directory.GetCurrentDirectory() + "connectionInfo";
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+
+            string hash1 = Hash("password");
+            string hash2 = Hash("password");
+            Console.Write("First Hash: " + hash1 + "\nHash2: " + hash2);
+            Console.WriteLine(hash1 == hash2);
+        }
+
+        public string Hash(string password)
+        {
+            Encoding encoding = Encoding.UTF8;
+            byte[] passBytes = encoding.GetBytes(password);
+            byte[] saltBytes = encoding.GetBytes(salt);
+
+            byte[] combinedBytes = new byte[passBytes.Length + saltBytes.Length];
+
+            for (int i = 0; i < passBytes.Length; i++)
+            {
+                combinedBytes[i] = passBytes[i];
+            }
+            for (int i = 0; i < saltBytes.Length; i++)
+            {
+                combinedBytes[passBytes.Length + i] = saltBytes[i];
+            }
+            byte[] final;
+            using (SHA256 algorithm = SHA256.Create())
+            {
+                final = algorithm.ComputeHash(combinedBytes);
+            }
+
+            return encoding.GetString(final);
+        }
     }
-
-
-
     #endregion
 }
 
