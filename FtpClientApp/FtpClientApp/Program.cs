@@ -250,7 +250,7 @@ namespace FtpClient
                     FtpTestWrapper wrapper_file = new FtpTestWrapper();
                     Console.WriteLine(" ** Specify file to be uploaded \n (Mention absolute path in this format, for ex: C:/xyz/rst/abc.filetype. Filetypes accepted: .txt, .jpg, .png ** \n");
                     String filetobeuploaded = uploadfile.getFileName();
-                    Console.WriteLine(" \n ** Specify valid location on server where file is to be uploaded (for ex: ftp://localhost/test) \n");
+                    Console.WriteLine(" \n ** Specify valid directory on server where file is to be uploaded (for ex: Enter TEST for ftp://localhost/TEST) \n");
                     String locationonserver = uploadfile.getFileName();
                     String response_file = uploadfile.setup(filetobeuploaded, locationonserver);
 

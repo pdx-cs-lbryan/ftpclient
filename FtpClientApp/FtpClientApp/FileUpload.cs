@@ -56,8 +56,8 @@ namespace FtpClientApp
                 String[] elements = System.Text.RegularExpressions.Regex.Split(input, pattern);
                 string lastItem = elements[elements.Length - 1];
                 Console.WriteLine("Uploading " + lastItem + " to server\n");
-
-                String serverpath = locationonserver + "/" + lastItem;
+                
+                String serverpath = this.connection.ServerName + "/" + locationonserver + "/" + lastItem;
 
                 String extension = Path.GetExtension(lastItem);
 
@@ -73,7 +73,7 @@ namespace FtpClientApp
                 request.Credentials = new NetworkCredential(this.connection.UserName, this.connection.PassWord);
                 byte[] responseArray = request1.UploadFile(serverpath, filetobeuploaded);
             }
-            catch (WebException e)
+            catch (Exception e)
             {
                 if (e.Message.ToString().Equals("The remote server returned an error: (550) File unavailable (e.g., file not found, no access)."))
                 {
@@ -82,7 +82,7 @@ namespace FtpClientApp
                 }
                 else
                 {
-                    Console.WriteLine("The server sent an error code of 550 \n The directory may not exist on the Server or \n Please check local file path and provide in Drive:xyz/abc.txt format \n ");
+                    Console.WriteLine(e.Message.ToString());
                     return "Please check local file path and provide in Drive:xyz/abc.txt path ";
                 }
             }
