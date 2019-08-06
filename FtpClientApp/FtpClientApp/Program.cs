@@ -243,7 +243,27 @@ namespace FtpClient
                     MyAnswer = false;
                     break;
                 case "2":
-                    Console.WriteLine(" Not Implemented Yet \n");
+                    Console.Clear();
+                    Console.WriteLine(" You chose: Upload file to Remote server  \n");
+                    //File upload
+                    FileUpload uploadfile = new FileUpload(conn);
+                    FtpTestWrapper wrapper_file = new FtpTestWrapper();
+                    Console.WriteLine(" ** Specify file to be uploaded \n (Mention absolute path in this format, for ex: C:/xyz/rst/abc.filetype. Filetypes accepted: .txt, .jpg, .png ** \n");
+                    String filetobeuploaded = uploadfile.getFileName();
+                    Console.WriteLine(" \n ** Specify valid location on server where file is to be uploaded (for ex: ftp://localhost/test) \n");
+                    String locationonserver = uploadfile.getFileName();
+                    String response_file = uploadfile.setup(filetobeuploaded, locationonserver);
+
+                    if (response_file == "success")
+                    {
+                        Console.Write("** File successfully uploaded **\n \n");
+                    }
+                    else
+                    {
+                        Console.Write("Could not Upload file.\n" + response_file + "\n");
+                        MyAnswer = true;
+                        break;
+                    }
                     MyAnswer = false;
                     break;
                 case "1":
