@@ -1,5 +1,4 @@
 ﻿using System;
-using System;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -8,21 +7,22 @@ namespace FtpClientApp
 {
     //Class for uploading a file on the remote FTP server 
     //Works off of the functions provided in Program.cs
-    public class FileUpload
+    public class CopyDirectory
     {
         //A MainMenu variable to keep track of the user and server for the use of an instance of this class.
         private ServerConnectionInformation connection;
-
-        private WebClient request;
+        private FtpWebRequest request;
+        //private WebClient request;
         private FtpTestWrapper wrapper;
 
         //A constructor for the class which takes in a ServerconnectionInformation to set up for its use.
-        public FileUpload(ServerConnectionInformation toUse)
+        public CopyDirectory(ServerConnectionInformation toUse)
         {
             this.connection = toUse;
+
         }
 
-        public void setRequest(WebClient req)
+        public void setRequest(FtpWebRequest req)
         {
             this.request = req;
         }
@@ -32,46 +32,60 @@ namespace FtpClientApp
             this.wrapper = wrapper;
         }
 
-        //A function to get File name to be uploaded & location where file is to eb stored. 
         public String getFileName()
         {
             String filepath = Console.ReadLine();
             return filepath;
         }
 
-        //setup() function takes 2 strings as input: file to be uploaded and location on server 
-        //returns a String which will be 'success' in the case File is successfully uploaded 
-        //Otherwise the string will contain a relevant error message.
-        public String setup(String filetobeuploaded, String locationonserver)
+        public string CopyDirectoryAndSubDirectories(
+            string sourceDirName, string destDirName)
         {
             try
             {
-                if (!File.Exists(filetobeuploaded))
-                {
-                    Console.WriteLine("File does not exist. Please enter valid file path");
-                    return "disconnect";
-                }
-                String input = filetobeuploaded;
-                String pattern = @"/";
-                String[] elements = System.Text.RegularExpressions.Regex.Split(input, pattern);
-                string lastItem = elements[elements.Length - 1];
-                Console.WriteLine("Uploading " + lastItem + " to server\n");
-                
-                String serverpath = this.connection.ServerName + "/" + locationonserver + "/" + lastItem;
+                DirectoryInfo dir = new DirectoryInfo(sourceDirName);
 
-                String extension = Path.GetExtension(lastItem);
-
-                if ((extension != ".txt") && (extension != ".jpg") && (extension != ".png"))
+                if (!dir.Exists)
                 {
-                    Console.WriteLine("Please enter one of the following file formats only :.txt, .jpg, .png");
-                    return "disconnect";
+                    throw new DirectoryNotFoundException(
+                        "Source directory does not exist or could not be found: "
+                        + sourceDirName);
                 }
 
-                WebClient request1 = new WebClient();
-                request1.Credentials = new NetworkCredential(this.connection.UserName, this.connection.PassWord);
-                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(this.connection.ServerName);
-                request.Credentials = new NetworkCredential(this.connection.UserName, this.connection.PassWord);
-                byte[] responseArray = request1.UploadFile(serverpath, filetobeuploaded);
+                if (!Directory.Exists(destDirName))
+                {
+                    // If the destination directory doesn't exist, create it.
+                    CreateRemoteDirectory createRemDir = new CreateRemoteDirectory(this.connection);
+                    FtpTestWrapper wrapper = new FtpTestWrapper();
+                    createRemDir.setWrapper(wrapper);
+                    createRemDir.setup(destDirName);
+                    String response = createRemDir.create(createRemDir.getWrapper());
+                }
+
+                // Get the files in the current directory and copy them to the new location.
+                FileInfo[] files = dir.GetFiles();
+                foreach (FileInfo file in files)
+                {
+                    String serverdirpath = this.connection.ServerName + "/" + destDirName;
+                    string temppath = Path.Combine(serverdirpath, file.Name);
+                    String filetobeuploaded = Path.Combine(sourceDirName, file.Name);
+
+                    WebClient request1 = new WebClient();
+                    request1.Credentials = new NetworkCredential(this.connection.UserName, this.connection.PassWord);
+                    FtpWebRequest request = (FtpWebRequest)WebRequest.Create(this.connection.ServerName);
+                    request.Credentials = new NetworkCredential(this.connection.UserName, this.connection.PassWord);
+                    byte[] responseArray = request1.UploadFile(temppath, filetobeuploaded);
+                }
+
+
+                DirectoryInfo[] dirs = dir.GetDirectories();
+
+                foreach (DirectoryInfo directory in dirs)
+                {
+                    String destDirNamesub = destDirName + "/" + directory.Name;
+                    String sourceDirNamesub = sourceDirName + "/" + directory.Name;
+                    CopyDirectoryAndSubDirectories(sourceDirNamesub, destDirNamesub);
+                }
             }
             catch (Exception e)
             {
@@ -83,15 +97,10 @@ namespace FtpClientApp
                 else
                 {
                     Console.WriteLine(e.Message.ToString());
-                    return "Please check local file path and provide in Drive:xyz/abc.txt path ";
+                    return "disconnect";
                 }
             }
             return "success";
-        }
-
-        public FtpTestWrapper getWrapper()
-        {
-            return this.wrapper;
         }
 
         public String create(FTPTestWrapperAbstract wrapper)
@@ -103,7 +112,7 @@ namespace FtpClientApp
                 {
                     if ((int)response.StatusCode >= 300)
                     {
-                        return "Error - could not upload file";
+                        return "Error - could not copy file";
                     }
                 }
 
@@ -125,7 +134,5 @@ namespace FtpClientApp
             return "success";
 
         }
-
     }
 }
-

@@ -104,7 +104,8 @@ namespace FtpClient
             Console.WriteLine("6) Change file permission on Remote Server");
             Console.WriteLine("7) Rename file on Remote Server");
             Console.WriteLine("8) List Files Local");
-            Console.WriteLine("9) Logout from Server \n");
+            Console.WriteLine("9) Copy Directory (files & subdirectory) to Remote Server");
+            Console.WriteLine("10) Logout from Server \n");
 
         } // end DisplayMenu()
 
@@ -116,13 +117,31 @@ namespace FtpClient
             ServerConnectionInformation conn = new ServerConnectionInformation(username, password, server);
             switch (getAnswer)
             {
-                case "9":
+                case "10":
                     Console.Clear();
                     Console.Write(username);
                     Console.WriteLine(" Logged out from server! \n");
                     Console.WriteLine(" ########################################### \n");
                     //Set response to 'true' to logout
                     MyAnswer = true;
+                    break;
+                case "9":
+                    //Copy Directory (including all files and subdirectory)
+                    CopyDirectory CopyDirectoryToRemote = new CopyDirectory(conn);
+                    Console.WriteLine(" ** Specify Directory to be copied to remote server \n (Mention absolute path in this format, for ex: C:/xyz/test/. Filetypes accepted: .txt, .jpg, .png ** \n");
+                    String sourcefile = CopyDirectoryToRemote.getFileName();
+                    Console.WriteLine(" \n ** Specify directory name on server where source directory is to be copied (for ex: test). \n");
+                    String destinationfileonserver = CopyDirectoryToRemote.getFileName();
+                    String res = CopyDirectoryToRemote.CopyDirectoryAndSubDirectories(sourcefile, destinationfileonserver);
+                    if (res == "success")
+                    {
+                        Console.Write("\n **** Successfully copied directory **** \n \n");
+                    }
+                    else
+                    {
+                        Console.Write("**** Could not copy directory due to an error.\n" + res + "\n");
+                    }
+                    MyAnswer = false;
                     break;
                 case "8":
                     Console.Clear();
@@ -250,7 +269,7 @@ namespace FtpClient
                     FtpTestWrapper wrapper_file = new FtpTestWrapper();
                     Console.WriteLine(" ** Specify file to be uploaded \n (Mention absolute path in this format, for ex: C:/xyz/rst/abc.filetype. Filetypes accepted: .txt, .jpg, .png ** \n");
                     String filetobeuploaded = uploadfile.getFileName();
-                    Console.WriteLine(" \n ** Specify valid location on server where file is to be uploaded (for ex: ftp://localhost/test) \n");
+                    Console.WriteLine(" \n ** Specify valid directory on server where file is to be uploaded (for ex: Enter TEST for ftp://localhost/TEST) \n");
                     String locationonserver = uploadfile.getFileName();
                     String response_file = uploadfile.setup(filetobeuploaded, locationonserver);
 
