@@ -4,7 +4,13 @@
   <?define pid = {87D8CCB7-0A6F-49F8-8F6A-7DFC501C4EA6}?>
   
 	<Product Id="$(var.pid)" Name="Team 7 FTP Client" Language="1033" Version="1.0.0.0" Manufacturer="Summer 2019 Agile Team 7" UpgradeCode="3a08a848-ce7c-4472-8aa0-01686340aeed">
-		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+		<Package InstallerVersion="200" 
+             Compressed="yes" 
+             InstallScope="perMachine"
+             Platform="x86"
+             Manufacturer="Summer 2019 Agile Team 7"
+             Description="An basic command line FTP client from Summer 2019 Agile Team 7"
+    />
 
 		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
 		<MediaTemplate />
