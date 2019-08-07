@@ -1,39 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  
+
   <?define pid = {87D8CCB7-0A6F-49F8-8F6A-7DFC501C4EA6}?>
-  
-	<Product Id="$(var.pid)" Name="Team 7 FTP Client" Language="1033" Version="1.0.0.0" Manufacturer="Summer 2019 Agile Team 7" UpgradeCode="3a08a848-ce7c-4472-8aa0-01686340aeed">
-		<Package InstallerVersion="200" 
-             Compressed="yes" 
+
+  <Product Id="$(var.pid)" Name="Team 7 FTP Client" Language="1033" Version="1.0.0.0" Manufacturer="Summer 2019 Agile Team 7" UpgradeCode="3a08a848-ce7c-4472-8aa0-01686340aeed">
+    <Package InstallerVersion="200"
+             Compressed="yes"
              InstallScope="perMachine"
              Platform="x86"
              Manufacturer="Summer 2019 Agile Team 7"
              Description="An basic command line FTP client from Summer 2019 Agile Team 7"
     />
 
-		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
-		<MediaTemplate />
+    <MajorUpgrade DowngradeErrorMessage="A newer version of Team 7 FTP Client is already installed." />
+    <MediaTemplate
+      EmbedCab ="yes"
+      />
 
-		<Feature Id="ProductFeature" Title="Installer" Level="1">
-			<ComponentGroupRef Id="ProductComponents" />
-		</Feature>
-	</Product>
+    <Feature Id="ProductFeature" Title="Installer" Level="1">
+      <ComponentGroupRef Id="ProductComponents" />
+      <ComponentGroupRef Id="GeneratedComponents" />
+    </Feature>
+  </Product>
 
-	<Fragment>
-		<Directory Id="TARGETDIR" Name="SourceDir">
-			<Directory Id="ProgramFilesFolder">
-				<Directory Id="INSTALLFOLDER" Name="Installer" />
-			</Directory>
-		</Directory>
-	</Fragment>
+  <Fragment>
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="anewsubdir" Name="Team 7 FTP">
+          <Directory Id="INSTALLFOLDER" Name="Team 7 FTP Client" />
+        </Directory>
+      </Directory>
+    </Directory>
+  </Fragment>
 
-	<Fragment>
-		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
-			<!-- TODO: Remove the comments around this Component element and the ComponentRef below in order to add resources to this installer. -->
-			<!-- <Component Id="ProductComponent"> -->
-				<!-- TODO: Insert files, registry keys, and other resources here. -->
-			<!-- </Component> -->
-		</ComponentGroup>
-	</Fragment>
+  <Fragment>
+    <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+      <!-- TODO: Remove the comments around this Component element and the ComponentRef below in order to add resources to this installer. -->
+      <!-- <Component Id="ProductComponent"> -->
+      <!-- TODO: Insert files, registry keys, and other resources here. -->
+      <!-- </Component> -->
+
+
+    </ComponentGroup>
+
+    <DirectoryRef Id="INSTALLFOLDER" FileSource="..\FtpClientApp\bin\Debug\netcoreapp2.1\win-x86\publish">
+
+    </DirectoryRef>
+
+  </Fragment>
 </Wix>
