@@ -9,15 +9,27 @@ Copyright (c) FakeItEasy contributors. (fakeiteasy@hagne.se)<br>
 Licence: https://github.com/FakeItEasy/FakeItEasy/blob/master/License.txt<br><br>
 https://github.com/robinrodricks/FluentFTP<br>
 Copyright (c) 2015 Robin Rodricks and FluentFTP Contributors<br>
-License: https://github.com/robinrodricks/FluentFTP/blob/master/LICENSE.TXT
+License: https://github.com/robinrodricks/FluentFTP/blob/master/LICENSE.TXT<br>
+https://wixtoolset.org/ (For the Installer)<br>
+License: https://wixtoolset.org/about/license/
 
 ## Building and Running
 
-Git clone the project into Visual Studio IDE and 
-run the code from there. 
+With Visual Studio 2019 IDE:
+Git clone the project into a directory.
 
+In Visual Studio, open the project folder and open the solution (.sln) file.
 
-Or from the command line:
+Set the project to FtpClientApp and click the green arrow.
+
+You can right click 'FtpClientAppTest' -> Run tests to automatically run all unit tests.
+
+If fakeiteasy and/or FluentFTP cannot be found, use the following guide to install and add NUGET packages to the solution:
+https://docs.microsoft.com/en-us/nuget/consume-packages/install-use-packages-visual-studio
+
+fakeiteasy should be version 5.1.1 and fluentftp version 27.0
+
+From the command line: (Is this still relevant given the libraries???)
 
 ```
 $ cd ftpclient/FtpClientApp/FtpClientApp
@@ -35,9 +47,9 @@ and then run it:
 $ mono Program.exe
 ```
 
-## Setting Up, Running, and Removing the Installer
+## Setting Up, Running, and Removing the Installer (Written for and Tested on Windows 10)
 
-1. Download the Wix Toolset build tool and the Wix Toolset Visual Studio Extension (2019): https://wixtoolset.org/releases/
+1. Download the Wix Toolset build tool (v 3.11) and the Wix Toolset Visual Studio Extension (2019): https://wixtoolset.org/releases/
 
 2. In visuals studio with the project open, right click on the project solution and go to configuration manager
 
@@ -88,3 +100,4 @@ Double click the file to begin the installation.
 ## Sources
 
 1.) https://docs.microsoft.com/en-us/dotnet/api/system.net.ftpwebrequest?view=netframework-4.8 
+2.) The following video was used as a reference in creating the installer: AngelSix - How To Create Windows Installer MSI - .Net Core Wix: https://www.youtube.com/watch?v=6Yf-eDsRrnM in addition to Wix Documentation: https://wixtoolset.org/documentation/
