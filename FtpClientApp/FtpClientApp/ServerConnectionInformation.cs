@@ -86,35 +86,48 @@ namespace FtpClientApp
                 Directory.CreateDirectory(dirPath);
             }
 
-            File.WriteAllText(usrPath, UserName);
-            File.WriteAllText(pasPath, PassWord);
-            File.WriteAllText(serPath, ServerName);
+            //verify that encoding and decoding works
+            //
+            //string e = EncodeToBase64(PassWord);
+            //string c = DecodeFrom64(e);
+            //StringBuilder sb = new StringBuilder();
+            //sb.AppendLine(PassWord);
+            //sb.AppendLine(e);
+            //sb.AppendLine(c);
+            //Console.WriteLine(sb.ToString());
+
+            File.WriteAllText(usrPath, EncodeToBase64(UserName));
+            File.WriteAllText(pasPath, EncodeToBase64(PassWord));
+            File.WriteAllText(serPath, EncodeToBase64(ServerName));
         }
 
-        //unused hash function
-        private string Hash(string str)
+        //encryption taken from https://www.c-sharpcorner.com/blogs/how-to-encrypt-or-decrypt-password-using-asp-net-with-c-sharp1
+        public static string EncodeToBase64(string value)
         {
-            Encoding encoding = Encoding.UTF8;
-            byte[] passBytes = encoding.GetBytes(str);
-            byte[] saltBytes = encoding.GetBytes(salt);
-
-            byte[] combinedBytes = new byte[passBytes.Length + saltBytes.Length];
-
-            for (int i = 0; i < passBytes.Length; i++)
+            try
             {
-                combinedBytes[i] = passBytes[i];
+                byte[] encData_byte = new byte[value.Length];
+                encData_byte = System.Text.Encoding.UTF8.GetBytes(value);
+                string encodedData = Convert.ToBase64String(encData_byte);
+                return encodedData;
             }
-            for (int i = 0; i < saltBytes.Length; i++)
+            catch (Exception ex)
             {
-                combinedBytes[passBytes.Length + i] = saltBytes[i];
+                throw new Exception("Error in base64Encode" + ex.Message);
             }
-            byte[] final;
-            using (SHA256 algorithm = SHA256.Create())
-            {
-                final = algorithm.ComputeHash(combinedBytes);
-            }
+        }
 
-            return encoding.GetString(final);
+        //decryption taken from https://www.c-sharpcorner.com/blogs/how-to-encrypt-or-decrypt-password-using-asp-net-with-c-sharp1
+        public string DecodeFrom64(string value)
+        {
+            System.Text.UTF8Encoding encoder = new System.Text.UTF8Encoding();
+            System.Text.Decoder utf8Decode = encoder.GetDecoder();
+            byte[] todecode_byte = Convert.FromBase64String(value);
+            int charCount = utf8Decode.GetCharCount(todecode_byte, 0, todecode_byte.Length);
+            char[] decoded_char = new char[charCount];
+            utf8Decode.GetChars(todecode_byte, 0, todecode_byte.Length, decoded_char, 0);
+            string result = new String(decoded_char);
+            return result;
         }
     }
     #endregion

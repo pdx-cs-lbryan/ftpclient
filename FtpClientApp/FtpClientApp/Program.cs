@@ -105,7 +105,8 @@ namespace FtpClient
             Console.WriteLine("7) Rename file on Remote Server");
             Console.WriteLine("8) List Files Local");
             Console.WriteLine("9) Copy Directory (files & subdirectory) to Remote Server");
-            Console.WriteLine("10) Logout from Server \n");
+            Console.WriteLine("10) Save Connection Information");
+            Console.WriteLine("11) Logout from Server \n");
 
         } // end DisplayMenu()
 
@@ -117,13 +118,21 @@ namespace FtpClient
             ServerConnectionInformation conn = new ServerConnectionInformation(username, password, server);
             switch (getAnswer)
             {
-                case "10":
+                case "11":
                     Console.Clear();
                     Console.Write(username);
                     Console.WriteLine(" Logged out from server! \n");
                     Console.WriteLine(" ########################################### \n");
                     //Set response to 'true' to logout
                     MyAnswer = true;
+                    break;
+                case "10":
+                    Console.Clear();
+                    conn.Save();
+                    Console.WriteLine("Connection Info Saved.");
+                    System.Threading.Thread.Sleep(5000);
+                    Console.Clear();
+                    MyAnswer = false;
                     break;
                 case "9":
                     //Copy Directory (including all files and subdirectory)
