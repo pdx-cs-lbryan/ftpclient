@@ -13,9 +13,12 @@
     />
 
     <MajorUpgrade DowngradeErrorMessage="A newer version of Team 7 FTP Client is already installed." />
+   
+    <!--From reference 2 - AngelSix - How to Create... -->
     <MediaTemplate
       EmbedCab ="yes"
       />
+    <!-- End reference -->
 
     <Feature Id="ProductFeature" Title="Installer" Level="1">
       <ComponentGroupRef Id="GeneratedComponents" />
@@ -28,12 +31,5 @@
           <Directory Id="INSTALLFOLDER" Name="Team 7 FTP Client" />
         </Directory>
     </Directory>
-  </Fragment>
-
-  <Fragment>
-    <DirectoryRef Id="INSTALLFOLDER" FileSource="..\FtpClientApp\bin\Debug\netcoreapp2.1\win-x86\publish">
-
-    </DirectoryRef>
-
   </Fragment>
 </Wix>
