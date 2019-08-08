@@ -26,6 +26,8 @@ namespace FtpClient
 {
     public class FtpClientMain
     {
+        static FtpClientApp.Timeout _inactiveTimeRetriever;
+
         static void Main(string[] args)
         {
             // Press Ctrl+F5 (or go to Debug > Start Without Debugging) to run your app.
@@ -68,8 +70,11 @@ namespace FtpClient
                      * if the input option is set to the log out option, set timeout to false
                      */
 
-                    while (timeout == false)
+                    bool idle = false;
+
+                    while (timeout == false || idle == false)
                     {
+                        idle = InactivityTimer();
                         DisplayMenu();
                         timeout = GetResponce(username, password, server);
 
@@ -92,6 +97,25 @@ namespace FtpClient
 
         } // end Main()
 
+        public static bool InactivityTimer()
+        {
+            _inactiveTimeRetriever = new FtpClientApp.Timeout();
+            var inactiveTime = _inactiveTimeRetriever.TimemoutTime();
+
+            if(inactiveTime == null)
+            {
+                return false;
+            }
+
+            else if(inactiveTime.Value.TotalSeconds > 10)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
         public static void DisplayMenu()
         {
