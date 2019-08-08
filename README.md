@@ -50,6 +50,8 @@ $ mono Program.exe
 
 ## Setting Up, Running, and Removing the Installer (Written for and Tested on Windows 10)
 
+Note: When a path is given, it will be preceded with 'path\to\...' This should be changed to your path to that location.
+
 1. Download the Wix Toolset build tool (v 3.11) and the Wix Toolset Visual Studio Extension (2019): https://wixtoolset.org/releases/
 
 2. In visuals studio with the project open, right click on the project solution and go to configuration manager
