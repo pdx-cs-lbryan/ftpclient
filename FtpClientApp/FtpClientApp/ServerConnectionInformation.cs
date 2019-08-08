@@ -11,7 +11,12 @@ namespace FtpClientApp
         private string userName;
         private string passWord;
         private string serverName;
+        //obviously shouldn't be called salt but is for readability
         private readonly string salt = "JEcv4Wqii5t";
+        private const string directoryName = "ServerInformation";
+        private const string userFile = "user.txt";
+        private const string passFile = "pass.txt";
+        private const string serverFile = "server.txt";
         #endregion
 
         #region Public Declarations
@@ -41,6 +46,27 @@ namespace FtpClientApp
             this.serverName = null;
         }
 
+        //BaseDir gets where the three info files are stored
+        private string BaseDirectory()
+        {
+            return Path.Combine(Directory.GetCurrentDirectory(), directoryName);
+        }
+
+        private string UserFile()
+        {
+            return Path.Combine(BaseDirectory(), userFile);
+        }
+
+        private string ServerFile()
+        {
+            return Path.Combine(BaseDirectory(), serverFile);
+        }
+
+        private string PassFile()
+        {
+            return Path.Combine(BaseDirectory(), passFile);
+        }
+
         public ServerConnectionInformation(String user, String pass, String server)
         {
             this.userName = user;
@@ -50,23 +76,26 @@ namespace FtpClientApp
 
         public void Save()
         {
-            Console.WriteLine(Directory.GetCurrentDirectory());
-            string path = Directory.GetCurrentDirectory() + "connectionInfo";
-            if (!Directory.Exists(path))
+            string dirPath = BaseDirectory();
+            string usrPath = UserFile();
+            string pasPath = PassFile();
+            string serPath = ServerFile();
+
+            if (!Directory.Exists(dirPath))
             {
-                Directory.CreateDirectory(path);
+                Directory.CreateDirectory(dirPath);
             }
 
-            string hash1 = Hash("password");
-            string hash2 = Hash("password");
-            Console.Write("First Hash: " + hash1 + "\nHash2: " + hash2);
-            Console.WriteLine(hash1 == hash2);
+            File.WriteAllText(usrPath, UserName);
+            File.WriteAllText(pasPath, PassWord);
+            File.WriteAllText(serPath, ServerName);
         }
 
-        public string Hash(string password)
+        //unused hash function
+        private string Hash(string str)
         {
             Encoding encoding = Encoding.UTF8;
-            byte[] passBytes = encoding.GetBytes(password);
+            byte[] passBytes = encoding.GetBytes(str);
             byte[] saltBytes = encoding.GetBytes(salt);
 
             byte[] combinedBytes = new byte[passBytes.Length + saltBytes.Length];
