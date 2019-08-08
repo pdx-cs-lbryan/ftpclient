@@ -130,7 +130,7 @@ namespace FtpClient
                     Console.Clear();
                     conn.Save();
                     Console.WriteLine("Connection Info Saved.");
-                    System.Threading.Thread.Sleep(5000);
+                    System.Threading.Thread.Sleep(2000);
                     Console.Clear();
                     MyAnswer = false;
                     break;
