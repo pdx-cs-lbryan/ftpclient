@@ -60,7 +60,7 @@ Note: When a path is given, it will be preceded with 'path\to\...' This should b
 
 4. Go to the properties for FtpClientApp and FtpClientAppTest, and set suppress warnings as: `'1701;1702;NU1605'`
 
-5. From the project directory (directory containin the .sln file), run: `dotnet publish -r win-x86`
+5. From the project directory (directory containin the .sln file), run: `dotnet publish -r win-x86` (ignore errors, warnings so long as the publish folder listed below is created)
 
 6a. modify components.wxs to your path in line 2:
 
