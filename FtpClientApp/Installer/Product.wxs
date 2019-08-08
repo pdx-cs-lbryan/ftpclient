@@ -18,7 +18,6 @@
       />
 
     <Feature Id="ProductFeature" Title="Installer" Level="1">
-      <ComponentGroupRef Id="ProductComponents" />
       <ComponentGroupRef Id="GeneratedComponents" />
     </Feature>
   </Product>
@@ -26,23 +25,12 @@
   <Fragment>
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="ProgramFilesFolder">
-        <Directory Id="anewsubdir" Name="Team 7 FTP">
           <Directory Id="INSTALLFOLDER" Name="Team 7 FTP Client" />
         </Directory>
-      </Directory>
     </Directory>
   </Fragment>
 
   <Fragment>
-    <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
-      <!-- TODO: Remove the comments around this Component element and the ComponentRef below in order to add resources to this installer. -->
-      <!-- <Component Id="ProductComponent"> -->
-      <!-- TODO: Insert files, registry keys, and other resources here. -->
-      <!-- </Component> -->
-
-
-    </ComponentGroup>
-
     <DirectoryRef Id="INSTALLFOLDER" FileSource="..\FtpClientApp\bin\Debug\netcoreapp2.1\win-x86\publish">
 
     </DirectoryRef>

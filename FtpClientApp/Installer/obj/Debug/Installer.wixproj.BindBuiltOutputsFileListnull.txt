@@ -1,2 +1,0 @@
-C:\Users\calen\Desktop\ftp\ftpclient\FtpClientApp\Installer\bin\Debug\Installer.msi
-C:\Users\calen\Desktop\ftp\ftpclient\FtpClientApp\Installer\bin\Debug\Installer.wixpdb
