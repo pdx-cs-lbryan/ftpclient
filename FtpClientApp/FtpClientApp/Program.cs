@@ -35,6 +35,8 @@ namespace FtpClient
             String username = "";
             String password = "";
             String server = "";
+            LogFiles MyLogFile = new LogFiles();
+            MyLogFile.StartLog();
 
             while (running == 1)
             {
@@ -46,8 +48,10 @@ namespace FtpClient
                     Console.WriteLine("Enter your FTP server (localhost, an IP address, etc.) excluding 'ftp://'\n");
                     server = Console.ReadLine();
                     server = "ftp://" + server;
+                    MyLogFile.WriteLog(" ftp Server " + server);
                     Console.WriteLine("Enter your FTP server username\n");
                     username = Console.ReadLine();
+                    MyLogFile.WriteLog(" ftp username " + username);
                     Console.WriteLine("Enter your FTP server password\n");
                     password = Console.ReadLine();
 
@@ -71,7 +75,7 @@ namespace FtpClient
                     while (timeout == false)
                     {
                         DisplayMenu();
-                        timeout = GetResponce(username, password, server);
+                        timeout = GetResponce(username, password, server, MyLogFile);
 
                         //TIMEOUT -- probably want to do timeout check here
                     }
@@ -90,6 +94,7 @@ namespace FtpClient
                 }
             }
 
+            MyLogFile.EndLog();
         } // end Main()
 
 
@@ -109,7 +114,7 @@ namespace FtpClient
 
         } // end DisplayMenu()
 
-        public static bool GetResponce(String username, String password, String server)
+        public static bool GetResponce(String username, String password, String server, LogFiles MyLogFile)
         {
             string getAnswer = "";
             bool MyAnswer = false;
@@ -121,6 +126,7 @@ namespace FtpClient
                     Console.Clear();
                     Console.Write(username);
                     Console.WriteLine(" Logged out from server! \n");
+                    MyLogFile.WriteLog(" Logged out from server! ");
                     Console.WriteLine(" ########################################### \n");
                     //Set response to 'true' to logout
                     MyAnswer = true;
@@ -136,20 +142,26 @@ namespace FtpClient
                     if (res == "success")
                     {
                         Console.Write("\n **** Successfully copied directory **** \n \n");
+                        MyLogFile.WriteLog(" Successfully copied source directory " + sourcefile );
+                        MyLogFile.WriteLog(" Destination directory " + destinationfileonserver );
                     }
                     else
                     {
                         Console.Write("**** Could not copy directory due to an error.\n" + res + "\n");
+                        MyLogFile.WriteLog(" Source directory Copy Failed " + sourcefile);
+                        MyLogFile.WriteLog(" Destination directory " + destinationfileonserver);
                     }
                     MyAnswer = false;
                     break;
                 case "8":
+                    //List Local Directory
                     Console.Clear();
                     ListDirectoryLocal list = new ListDirectoryLocal();
                     //get user input
                     Console.WriteLine("Enter an absolute path to directory:");
                     string Dir = Console.ReadLine();
                     bool result = list.ListDirectory(Dir);
+                    MyLogFile.WriteLog(" Listing Local directory " + Dir );
                     MyAnswer = false;
                     break;
                 case "7":
@@ -165,10 +177,13 @@ namespace FtpClient
                     if (response2 == "success")
                     {
                         Console.Write("File renamed\n");
+                        MyLogFile.WriteLog(" Successfully ReNamed File " + fileRename);
+                        MyLogFile.WriteLog(" New File Name " + newName);
                     }
                     else
                     {
                         Console.Write("Could not rename file due to an error.\n" + response2 + "\n");
+                        MyLogFile.WriteLog(" Failed to Renamed File " + fileRename);
                     }
 
                     MyAnswer = false;
@@ -192,10 +207,13 @@ namespace FtpClient
                         if(permresponse.Equals("success"))
                         {
                             Console.WriteLine("Permissions Changed");
+                            MyLogFile.WriteLog(" Successfully changed permissions ");
+
                         } else
                         {
                             Console.WriteLine("Could Not Change Permissions due to Error:");
                             Console.WriteLine(permresponse);
+                            MyLogFile.WriteLog(" Failed to change permissions ");
                         }
                         
                         MyAnswer = false;
@@ -212,10 +230,12 @@ namespace FtpClient
                     if (response1 == "success")
                     {
                         Console.Write("File deleted\n");
+                        MyLogFile.WriteLog(" Successfully Deleted File " + file );
                     }
                     else
                     {
                         Console.Write("Could not delete file due to an error.\n" + response1 + "\n");
+                        MyLogFile.WriteLog(" Could not delete file due to an error. " + file + "   " + response1);
                     }
 
                     MyAnswer = false;
@@ -233,16 +253,19 @@ namespace FtpClient
                     if (changeresponse == "success")
                     {
                         Console.Write("Directory Created\n");
+                        MyLogFile.WriteLog(" Successfully Created Directory " + directory);
                     }
                     else if (changeresponse == "disconnect")
                     {
                         //If lost connection to server, log out
+                        MyLogFile.WriteLog(" lost connection to server, log out ");
                         MyAnswer = true;
                         break;
                     }
                     else
                     {
                         Console.Write("Could not create directory due to an error.\n" + changeresponse + "\n");
+                        MyLogFile.WriteLog("Could not create directory due to an error. " + directory + "   " + changeresponse);
                     }
                     MyAnswer = false;
                     break;
@@ -253,10 +276,12 @@ namespace FtpClient
                     if (response3 == "success")
                     {
                         Console.Write("Success: These are the files in the directory: \n");
+                        MyLogFile.WriteLog(" Listed Directory successfully! ");
                     }
                     else
                     {
                         Console.Write("Error: Can not list files in current directory. \n" + response3 + "\n");
+                        MyLogFile.WriteLog(" Failed to List Directory! ");
                     }
 
                     MyAnswer = false;
@@ -276,10 +301,12 @@ namespace FtpClient
                     if (response_file == "success")
                     {
                         Console.Write("** File successfully uploaded **\n \n");
+                        MyLogFile.WriteLog(" File successfully uploaded " + filetobeuploaded);
                     }
                     else
                     {
                         Console.Write("Could not Upload file.\n" + response_file + "\n");
+                        MyLogFile.WriteLog("Could not Upload file. " + filetobeuploaded + "   " + response_file);
                         MyAnswer = true;
                         break;
                     }
@@ -293,14 +320,15 @@ namespace FtpClient
                     if (response4 == "success")
                     {
                         Console.Write("File downloaded!\n");
+                        MyLogFile.WriteLog("File downloaded " );
                     }
                     else
                     {
                         Console.Write("Error: Could not download file.\n" + response4 + "\n");
+                        MyLogFile.WriteLog("Error: Could not download file." + response4);
                     }
 
                     MyAnswer = false;
-                    //File upload
                     break;
                 default:
                     Console.WriteLine("\n That was not a valid input, Please try again \n");
