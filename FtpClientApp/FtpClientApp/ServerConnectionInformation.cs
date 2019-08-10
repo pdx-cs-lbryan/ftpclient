@@ -11,12 +11,10 @@ namespace FtpClientApp
         private string userName;
         private string passWord;
         private string serverName;
-        //obviously shouldn't be called salt but is for readability
-        private readonly string salt = "JEcv4Wqii5t";
-        private const string directoryName = "ServerInformation";
-        private const string userFile = "user.txt";
-        private const string passFile = "pass.txt";
-        private const string serverFile = "server.txt";
+        private readonly byte[] v = { 0x68, 0x35, 0x54, 0x72, 0x44, 0x65, 0x77, 0x76, 0x42, 0x31, 0x69, 0x55, 0x33, 0x55, 0x50, 0x71 };
+        private readonly byte[] k = { 0x76, 0x43, 0x38, 0x58, 0x61, 0x70, 0x67, 0x33, 0x46, 0x69, 0x42, 0x49, 0x30, 0x70, 0x54, 0x74, 0x59, 0x55, 0x62, 0x76, 0x49, 0x72, 0x45, 0x64, 0x35, 0x56, 0x33, 0x33, 0x48, 0x37, 0x68, 0x62 };
+        private const string d = "dat";
+        private const string f = "dat.txt";
         #endregion
 
         #region Public Declarations
@@ -49,22 +47,12 @@ namespace FtpClientApp
         //BaseDir gets where the three info files are stored
         private string BaseDirectory()
         {
-            return Path.Combine(Directory.GetCurrentDirectory(), directoryName);
+            return Path.Combine(Directory.GetCurrentDirectory(), d);
         }
 
-        private string UserFile()
+        private string GetPath()
         {
-            return Path.Combine(BaseDirectory(), userFile);
-        }
-
-        private string ServerFile()
-        {
-            return Path.Combine(BaseDirectory(), serverFile);
-        }
-
-        private string PassFile()
-        {
-            return Path.Combine(BaseDirectory(), passFile);
+            return Path.Combine(BaseDirectory(), f);
         }
 
         public ServerConnectionInformation(String user, String pass, String server)
@@ -77,58 +65,73 @@ namespace FtpClientApp
         public void Save()
         {
             string dirPath = BaseDirectory();
-            string usrPath = UserFile();
-            string pasPath = PassFile();
-            string serPath = ServerFile();
+            string path = GetPath();
 
             if (!Directory.Exists(dirPath))
             {
                 Directory.CreateDirectory(dirPath);
             }
 
-            //verify that encoding and decoding works
-            //
-            //string e = EncodeToBase64(PassWord);
-            //string c = DecodeFrom64(e);
-            //StringBuilder sb = new StringBuilder();
-            //sb.AppendLine(PassWord);
-            //sb.AppendLine(e);
-            //sb.AppendLine(c);
-            //Console.WriteLine(sb.ToString());
-
-            File.WriteAllText(usrPath, EncodeToBase64(UserName));
-            File.WriteAllText(pasPath, EncodeToBase64(PassWord));
-            File.WriteAllText(serPath, EncodeToBase64(ServerName));
+            byte[] temp1 = Encrypt(ServerName, k, v);
+            byte[] temp2 = Encrypt(UserName, k, v);
+            byte[] temp3 = Encrypt(PassWord, k, v);
+            File.WriteAllText(path, $"{Encoding.ASCII.GetString(temp1)}\n{Encoding.ASCII.GetString(temp2)}\n{Encoding.ASCII.GetString(temp3)}");
         }
 
-        //encryption taken from https://www.c-sharpcorner.com/blogs/how-to-encrypt-or-decrypt-password-using-asp-net-with-c-sharp1
-        public static string EncodeToBase64(string value)
+        private static byte[] Encrypt(string text, byte[] Key, byte[] IV)
         {
-            try
+            byte[] encryptedText;
+
+            using(Aes aesAlgo = Aes.Create())
             {
-                byte[] encData_byte = new byte[value.Length];
-                encData_byte = System.Text.Encoding.UTF8.GetBytes(value);
-                string encodedData = Convert.ToBase64String(encData_byte);
-                return encodedData;
+                aesAlgo.Key = Key;
+                aesAlgo.IV = IV;
+
+                ICryptoTransform encryptor = aesAlgo.CreateEncryptor(aesAlgo.Key, aesAlgo.IV);
+
+                using(MemoryStream msEncrypt = new MemoryStream())
+                {
+                    using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor,CryptoStreamMode.Write))
+                    {
+                        using(StreamWriter swEncrypt = new StreamWriter(csEncrypt))
+                        {
+                            //Write all data
+                            swEncrypt.Write(text);
+                        }
+                        encryptedText = msEncrypt.ToArray();
+                    }
+                }
+                
             }
-            catch (Exception ex)
-            {
-                throw new Exception("Error in base64Encode" + ex.Message);
-            }
+            return encryptedText;
         }
 
-        //decryption taken from https://www.c-sharpcorner.com/blogs/how-to-encrypt-or-decrypt-password-using-asp-net-with-c-sharp1
-        public string DecodeFrom64(string value)
+        private static string Decrypt(byte[] text, byte[] Key, byte[] IV)
         {
-            System.Text.UTF8Encoding encoder = new System.Text.UTF8Encoding();
-            System.Text.Decoder utf8Decode = encoder.GetDecoder();
-            byte[] todecode_byte = Convert.FromBase64String(value);
-            int charCount = utf8Decode.GetCharCount(todecode_byte, 0, todecode_byte.Length);
-            char[] decoded_char = new char[charCount];
-            utf8Decode.GetChars(todecode_byte, 0, todecode_byte.Length, decoded_char, 0);
-            string result = new String(decoded_char);
-            return result;
+            string plainText = string.Empty;
+
+            using(Aes aesAlgo = Aes.Create())
+            {
+                aesAlgo.Key = Key;
+                aesAlgo.IV = IV;
+
+                ICryptoTransform decryptor = aesAlgo.CreateDecryptor(aesAlgo.Key, aesAlgo.IV);
+
+                using(MemoryStream msDecrypt = new MemoryStream(text))
+                {
+                    using(CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Write))
+                    {
+                        using (StreamReader scDecrypt = new StreamReader(csDecrypt))
+                        {
+                            plainText = scDecrypt.ReadToEnd();
+                        }
+                    }
+                }
+            }
+            return plainText;
         }
+
+
     }
     #endregion
 }
