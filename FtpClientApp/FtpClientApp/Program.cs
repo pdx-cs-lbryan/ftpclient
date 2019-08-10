@@ -76,7 +76,7 @@ namespace FtpClient
 
                     System.Timers.Timer aTimer = new System.Timers.Timer();
                     aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
-                    aTimer.Interval = 10000;
+                    aTimer.Interval = 300000; // 5 min
                     aTimer.Enabled = true;
                     //aTimer.Stop();
                     //aTimer.Dispose();
