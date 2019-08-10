@@ -13,4 +13,8 @@
     <PackageReference Include="FluentFTP" Version="27.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="Timeout.cs" />
+    <Compile Remove="Timer.cs" />
+  </ItemGroup>
 </Project>
