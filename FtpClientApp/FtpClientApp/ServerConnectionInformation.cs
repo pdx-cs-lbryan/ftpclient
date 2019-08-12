@@ -71,11 +71,11 @@ namespace FtpClientApp
             {
                 Directory.CreateDirectory(dirPath);
             }
-
+            
             byte[] temp1 = Encrypt(ServerName, k, v);
             byte[] temp2 = Encrypt(UserName, k, v);
             byte[] temp3 = Encrypt(PassWord, k, v);
-            File.WriteAllText(path, $"{Encoding.ASCII.GetString(temp1)}\n{Encoding.ASCII.GetString(temp2)}\n{Encoding.ASCII.GetString(temp3)}");
+            File.WriteAllText(path, $"{Convert.ToBase64String(temp1)}\n{Convert.ToBase64String(temp2)}\n{Convert.ToBase64String(temp3)}");
         }
 
         private static byte[] Encrypt(string text, byte[] Key, byte[] IV)
@@ -119,7 +119,7 @@ namespace FtpClientApp
 
                 using(MemoryStream msDecrypt = new MemoryStream(text))
                 {
-                    using(CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Write))
+                    using(CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
                     {
                         using (StreamReader scDecrypt = new StreamReader(csDecrypt))
                         {
