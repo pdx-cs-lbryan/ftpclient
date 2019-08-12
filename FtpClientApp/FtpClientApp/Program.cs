@@ -87,6 +87,7 @@ namespace FtpClient
                     bool test_use = conn.load_saved_info();
                     if(test_use == true)
                     {
+                        Console.WriteLine("Logging in as User: " + conn.getUser() + " on Server: " + conn.getServer());
                         //if it was, set it to the program.cs info
                         username = conn.getUser();
                         password = conn.getPass();

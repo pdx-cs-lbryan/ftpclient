@@ -66,6 +66,7 @@ namespace FtpClientApp
                     System.IO.StreamReader saved = new System.IO.StreamReader(path);
 
                     info = saved.ReadToEnd();
+                    saved.Close();
                 } catch(ArgumentException e)
                 {
                     Console.WriteLine(e.Message);
@@ -106,7 +107,7 @@ namespace FtpClientApp
                             String pe = parts[2];
                             byte[] sbe = Convert.FromBase64String(se);
                             byte[] ube = Convert.FromBase64String(ue);
-                            byte[] pbe = Convert.FromBase64String(pbe);
+                            byte[] pbe = Convert.FromBase64String(pe);
 
                             this.ServerName = Decrypt(sbe, this.k, this.v);
                             this.UserName = Decrypt(ube, this.k, this.v);
@@ -128,10 +129,6 @@ namespace FtpClientApp
 
                     
             }
-
-
-
-            return false;
         }
 
         //return pass for used saved info
@@ -149,7 +146,7 @@ namespace FtpClientApp
         //Return server name for loading saved info
         public String getServer()
         {
-            return this.serverName
+            return this.serverName;
         }
 
         //BaseDir gets where the three info files are stored
