@@ -141,7 +141,8 @@ namespace FtpClient
             Console.WriteLine("7) Rename file on Remote Server");
             Console.WriteLine("8) List Files Local");
             Console.WriteLine("9) Copy Directory (files & subdirectory) to Remote Server");
-            Console.WriteLine("10) Logout from Server \n");
+            Console.WriteLine("10) Put multiple files on Remote Server");
+            Console.WriteLine("11) Logout from Server \n");
 
             
         } // end DisplayMenu()
@@ -155,13 +156,33 @@ namespace FtpClient
 
             switch (getAnswer)
             {
-                case "10":
+                case "11":
                     Console.Clear();
                     Console.Write(username);
                     Console.WriteLine(" Logged out from server! \n");
                     Console.WriteLine(" ########################################### \n");
                     //Set response to 'true' to logout
                     MyAnswer = true;
+                    break;
+                case "10":
+                    //Put Multiple files on remote server
+                    PutMultipleFiles PutFilesToRemote = new PutMultipleFiles(conn);
+                    Console.WriteLine(" \n ** Specify local directory path of files to be uploaded \n (Mention absolute path in this format, for ex: C:/xyz/test/ ** \n");
+                    String sourcefile_m = PutFilesToRemote.getFileName();
+                    Console.WriteLine(" \n ** Specify files to be uploaded from aforementioned path. (Mention each file name separated by a comma. for ex: abc.txt, xyz.png, 123.txt). Filetypes accepted: .txt, .jpg, .png ** \n");
+                    String inputfilenames_m = PutFilesToRemote.getFileName();
+                    Console.WriteLine(" \n ** Specify directory name on server where source directory is to be copied (for ex: test). \n");
+                    String destinationfileonserver_m = PutFilesToRemote.getFileName();
+                    String res_m = PutFilesToRemote.CopyFiles(sourcefile_m, destinationfileonserver_m, inputfilenames_m);
+                    if (res_m == "success")
+                    {
+                        Console.Write("\n **** Uploade files complete. Please check messages for further info **** \n \n");
+                    }
+                    else
+                    {
+                        Console.Write("\n **** Could not upload files due to an error: \n" + res_m + "\n");
+                    }
+                    MyAnswer = false;
                     break;
                 case "9":
                     //Copy Directory (including all files and subdirectory)
