@@ -140,10 +140,11 @@ namespace FtpClient
             Console.WriteLine("6) Change file permission on Remote Server");
             Console.WriteLine("7) Rename file on Remote Server");
             Console.WriteLine("8) List Files Local");
-            Console.WriteLine("9) Copy Directory (files & subdirectory) to Remote Server");
-            Console.WriteLine("10) Put multiple files on Remote Server");
-            Console.WriteLine("11) Save Connection Information");
-            Console.WriteLine("12) Logout from Server \n");
+            Console.WriteLine("9) Rename local file");
+            Console.WriteLine("10) Copy Directory (files & subdirectory) to Remote Server");
+            Console.WriteLine("11) Put multiple files on Remote Server");
+            Console.WriteLine("12) Save Connection Information");
+            Console.WriteLine("13) Logout from Server \n");
 
             
         } // end DisplayMenu()
@@ -157,7 +158,7 @@ namespace FtpClient
 
             switch (getAnswer)
             {
-                case "12":
+                case "13":
                     Console.Clear();
                     Console.Write(username);
                     Console.WriteLine(" Logged out from server! \n");
@@ -165,7 +166,7 @@ namespace FtpClient
                     //Set response to 'true' to logout
                     MyAnswer = true;
                     break;
-                case "11":
+                case "12":
                     Console.Clear();
                     conn.Save();
                     Console.WriteLine("Connection Info Saved.");
@@ -173,7 +174,7 @@ namespace FtpClient
                     Console.Clear();
                     MyAnswer = false;
                     break;
-                case "10":
+                case "11":
                     //Put Multiple files on remote server
                     PutMultipleFiles PutFilesToRemote = new PutMultipleFiles(conn);
                     Console.WriteLine(" \n ** Specify local directory path of files to be uploaded \n (Mention absolute path in this format, for ex: C:/xyz/test/ ** \n");
@@ -193,7 +194,7 @@ namespace FtpClient
                     }
                     MyAnswer = false;
                     break;
-                case "9":
+                case "10":
                     //Copy Directory (including all files and subdirectory)
                     CopyDirectory CopyDirectoryToRemote = new CopyDirectory(conn);
                     Console.WriteLine(" ** Specify Directory to be copied to remote server \n (Mention absolute path in this format, for ex: C:/xyz/test/. Filetypes accepted: .txt, .jpg, .png ** \n");
@@ -208,6 +209,26 @@ namespace FtpClient
                     else
                     {
                         Console.Write("**** Could not copy directory due to an error.\n" + res + "\n");
+                    }
+                    MyAnswer = false;
+                    break;
+                case "9":
+                    //Rename local file
+                    RenameLocal localRename = new RenameLocal();
+                    Console.WriteLine("Enter the directory path followed by the file you wish to rename: ");
+                    Console.WriteLine("(i.e. C:/xyz/Desktop/file.txt");
+                    String fileLocal = Console.ReadLine();
+                    Console.WriteLine("Enter the directory path followed by the new name for the file: ");
+                    Console.WriteLine("(i.e. C:/xyz/Desktop/Newfile.txt");
+                    String newFileLocal = Console.ReadLine();
+                    String response10 = localRename.RenameFileLocal(fileLocal, newFileLocal);
+                    if (response10 == "success")
+                    {
+                        Console.Write("File renamed\n");
+                    }
+                    else
+                    {
+                        Console.Write("Could not rename file due to an error.\n" + response10 + "\n");
                     }
                     MyAnswer = false;
                     break;
