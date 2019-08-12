@@ -78,15 +78,40 @@ namespace FtpClient
                 else if (response == "3")
                 {
                     running = 0;
-                } else if (response == "3")
+                } else if (response == "2")
                 {
+                    //start up a SCI to access its file and decryption
                     ServerConnectionInformation conn = new ServerConnectionInformation();
+
+                    //load the old info if it's there
                     bool test_use = conn.load_saved_info();
                     if(test_use == true)
                     {
+                        //if it was, set it to the program.cs info
                         username = conn.getUser();
                         password = conn.getPass();
                         server = conn.getServer();
+
+                        timeout = false;
+
+                        System.Timers.Timer aTimer = new System.Timers.Timer();
+                        aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+                        aTimer.Interval = 300000; // 5 min
+                        aTimer.Enabled = true;
+
+                        while (timeout == false)
+                        {
+                            DisplayMenu();
+                            timeout = GetResponce(username, password, server, "");
+
+                        }
+                        //On Logout, clear all user credentials stored
+                        username = "";
+                        password = "";
+                        server = "";
+                    } else
+                    {
+                        Console.WriteLine("There was no valid saved connection information");
                     }
                 }
                 else
