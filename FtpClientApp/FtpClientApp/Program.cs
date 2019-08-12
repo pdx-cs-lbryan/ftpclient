@@ -19,22 +19,28 @@ using System.Configuration;
 using System.Reflection;
 using System.Security.Principal;
 using System.Net.Sockets;
-using System.Threading;  // password
+using System.Threading;  // passwordusing System.Timers;
+using System.Timers; //Timer
 using FtpClientApp;
 
 namespace FtpClient
 {
     public class FtpClientMain
     {
-        static void Main(string[] args)
+        private static System.Timers.Timer aTimer;
+        private static bool timeout;
+        private static String username;
+        private static String password;
+        private static String server;
+        static void Main()
         {
             // Press Ctrl+F5 (or go to Debug > Start Without Debugging) to run your app.
             Console.WriteLine("  Welcome to FTPClient \n");
 
             int running = 1;
-            String username = "";
-            String password = "";
-            String server = "";
+            username = "";
+            password = "";
+            server = "";
 
             while (running == 1)
             {
@@ -51,7 +57,7 @@ namespace FtpClient
                     Console.WriteLine("Enter your FTP server password\n");
                     password = Console.ReadLine();
 
-                    bool timeout = false;
+                    timeout = false;
                     /**
                      * TO IMPLEMENT: LOG - IN
                      * Use the above info to try making a request to the server
@@ -68,11 +74,19 @@ namespace FtpClient
                      * if the input option is set to the log out option, set timeout to false
                      */
 
-                    while (timeout == false)
-                    {
-                        DisplayMenu();
-                        timeout = GetResponce(username, password, server);
+                    System.Timers.Timer aTimer = new System.Timers.Timer();
+                    aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+                    aTimer.Interval = 300000; // 5 min
+                    aTimer.Enabled = true;
+                    //aTimer.Stop();
+                    //aTimer.Dispose();
 
+                    while (timeout == false) 
+                    {   
+                        DisplayMenu();
+                        timeout = GetResponce(username, password, server, "");
+
+                       
                         //TIMEOUT -- probably want to do timeout check here
                     }
                     //On Logout, clear all user credentials stored
@@ -92,6 +106,28 @@ namespace FtpClient
 
         } // end Main()
 
+        private static void OnTimedEvent(object source, ElapsedEventArgs e)//Reference: https://docs.microsoft.com/en-us/dotnet/api/system.timers.timer?view=netframework-4.8
+        {
+            
+            ServerConnectionInformation conn = new ServerConnectionInformation(username, password, server);
+            Console.WriteLine(" You chose 3, List Files In Directory:  \n");
+            ListFiles listFiles = new ListFiles(conn);
+            String response3 = listFiles.ListFilesOnRemoteServer();
+            if (response3 == "success")
+            {
+                Console.Write("Success: Still connected to server \n");
+                timeout = false;
+                DisplayMenu();
+                return;
+            }
+            else
+            {
+                Console.Write("Error: not connected to server");
+                System.Environment.Exit(1);
+            }
+            
+        }
+
 
         public static void DisplayMenu()
         {
@@ -108,14 +144,16 @@ namespace FtpClient
             Console.WriteLine("10) Put multiple files on Remote Server");
             Console.WriteLine("11) Logout from Server \n");
 
+            
         } // end DisplayMenu()
 
-        public static bool GetResponce(String username, String password, String server)
+        public static bool GetResponce(String username, String password, String server, String getAnswer)
         {
-            string getAnswer = "";
+            //string getAnswer = "";
             bool MyAnswer = false;
             getAnswer = Console.ReadLine();
             ServerConnectionInformation conn = new ServerConnectionInformation(username, password, server);
+
             switch (getAnswer)
             {
                 case "11":
