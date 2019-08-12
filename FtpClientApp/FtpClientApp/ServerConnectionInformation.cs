@@ -44,6 +44,30 @@ namespace FtpClientApp
             this.serverName = null;
         }
 
+        //Tests if the client has saved connection info to access
+        public bool load_saved_info()
+        {
+            return false;
+        }
+
+        //return pass for used saved info
+        public String getPass()
+        {
+            return this.passWord;
+        }
+
+        //return user name for using saved info
+        public String getUser()
+        {
+            return this.UserName;
+        }
+
+        //Return server name for loading saved info
+        public String getServer()
+        {
+            return this.serverName
+        }
+
         //BaseDir gets where the three info files are stored
         private string BaseDirectory()
         {
