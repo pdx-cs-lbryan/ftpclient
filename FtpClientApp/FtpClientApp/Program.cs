@@ -233,19 +233,19 @@ namespace FtpClient
                     //Rename local file
                     RenameLocal localRename = new RenameLocal();
                     Console.WriteLine("Enter the directory path followed by the file you wish to rename: ");
-                    Console.WriteLine("(i.e. C:/xyz/Desktop/file.txt");
+                    Console.WriteLine("(i.e. C:\\xyz\\Desktop\\file.txt");
                     String fileLocal = Console.ReadLine();
                     Console.WriteLine("Enter the directory path followed by the new name for the file: ");
-                    Console.WriteLine("(i.e. C:/xyz/Desktop/Newfile.txt");
+                    Console.WriteLine("(i.e. C:\\xyz\\Desktop\\Newfile.txt");
                     String newFileLocal = Console.ReadLine();
                     String response10 = localRename.RenameFileLocal(fileLocal, newFileLocal);
                     if (response10 == "success")
                     {
-                        Console.Write("File renamed\n");
+                        Console.Write("File renamed\n\n");
                     }
                     else
                     {
-                        Console.Write("Could not rename file due to an error.\n" + response10 + "\n");
+                        Console.Write("Could not rename file due to an error.\n" + response10 + "\n\n");
                     }
                     MyAnswer = false;
                     break;
