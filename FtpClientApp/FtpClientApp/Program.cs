@@ -287,12 +287,12 @@ namespace FtpClient
                     if (response2 == "success")
                     {
                         Console.Write("File renamed\n");
-						MyLogFile(username + "renamed remote file " + fileRename + " to " + newName);
+						MyLogFile.WriteLog(username + "renamed remote file " + fileRename + " to " + newName);
                     }
                     else
                     {
                         Console.Write("Could not rename file due to an error.\n" + response2 + "\n");
-						MyLogFile(username + "could not rename remote file " + fileRename + " to " + newName);
+						MyLogFile.WriteLog(username + "could not rename remote file " + fileRename + " to " + newName);
                     }
 
                     MyAnswer = false;
@@ -309,7 +309,7 @@ namespace FtpClient
 
                     if (permresponse.Equals("Server Validation Failed\n") == true) {
                         Console.WriteLine("\nServer Validation Failed");
-						MyLogFile(username + "could not change permissions");
+						MyLogFile.WriteLog(username + "could not change permissions");
                         MyAnswer = true;
                         
                     } else
@@ -317,12 +317,12 @@ namespace FtpClient
                         if(permresponse.Equals("success"))
                         {
                             Console.WriteLine("Permissions Changed");
-							MyLogFile(username + "Changed Permissions");
+							MyLogFile.WriteLog(username + "Changed Permissions");
                         } else
                         {
                             Console.WriteLine("Could Not Change Permissions due to Error:");
                             Console.WriteLine(permresponse);
-							MyLogFile(username + " Could not change permissions");
+							MyLogFile.WriteLog(username + " Could not change permissions");
                         }
                         
                         MyAnswer = false;
