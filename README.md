@@ -103,4 +103,5 @@ Double click the file to begin the installation.
 ## Sources
 
 1.) https://docs.microsoft.com/en-us/dotnet/api/system.net.ftpwebrequest?view=netframework-4.8 <br>
-2.) The following video was used as a reference in creating the installer: AngelSix - How To Create Windows Installer MSI - .Net Core Wix: https://www.youtube.com/watch?v=6Yf-eDsRrnM in addition to Wix Documentation: https://wixtoolset.org/documentation/
+2.) The following video was used as a reference in creating the installer: AngelSix - How To Create Windows Installer MSI - .Net Core Wix: https://www.youtube.com/watch?v=6Yf-eDsRrnM in addition to Wix Documentation: https://wixtoolset.org/documentation/ <br>
+3.) Timer: https://docs.microsoft.com/en-us/dotnet/api/system.timers.timer?view=netframework-4.8
