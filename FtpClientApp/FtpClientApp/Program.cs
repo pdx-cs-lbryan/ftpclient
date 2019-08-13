@@ -44,7 +44,7 @@ namespace FtpClient
 
             while (running == 1)
             {
-                Console.WriteLine("Press 1 to log in, Press 2 to exit");
+                Console.WriteLine("Press 1 to log in, Press 2 to log in with saved information, 3 to exit");
                 String response = Console.ReadLine();
                 if (response == "1")
                 {
@@ -58,45 +58,62 @@ namespace FtpClient
                     password = Console.ReadLine();
 
                     timeout = false;
-                    /**
-                     * TO IMPLEMENT: LOG - IN
-                     * Use the above info to try making a request to the server
-                     * The request should be something like dirsize where only read permissions are necessary
-                     * Only matters if the response code indicates success, if so proceed.
-                     *
-                     *
-                     * TO IMPLEMENT: Time out
-                     * Repeat similar to the above with the request to the server. If the response code
-                     * doesn't indicate success, set timeout to true.
-                     *
-                     *
-                     * TO IMPLEMENT: Log out
-                     * if the input option is set to the log out option, set timeout to false
-                     */
 
                     System.Timers.Timer aTimer = new System.Timers.Timer();
                     aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
                     aTimer.Interval = 300000; // 5 min
                     aTimer.Enabled = true;
-                    //aTimer.Stop();
-                    //aTimer.Dispose();
 
                     while (timeout == false) 
                     {   
                         DisplayMenu();
                         timeout = GetResponce(username, password, server, "");
 
-                       
-                        //TIMEOUT -- probably want to do timeout check here
                     }
                     //On Logout, clear all user credentials stored
                    username = "";
                    password = "";
                    server = "";
                 }
-                else if (response == "2")
+                else if (response == "3")
                 {
                     running = 0;
+                } else if (response == "2")
+                {
+                    //start up a SCI to access its file and decryption
+                    ServerConnectionInformation conn = new ServerConnectionInformation();
+
+                    //load the old info if it's there
+                    bool test_use = conn.load_saved_info();
+                    if(test_use == true)
+                    {
+                        Console.WriteLine("Logging in as User: " + conn.getUser() + " on Server: " + conn.getServer());
+                        //if it was, set it to the program.cs info
+                        username = conn.getUser();
+                        password = conn.getPass();
+                        server = conn.getServer();
+
+                        timeout = false;
+
+                        System.Timers.Timer aTimer = new System.Timers.Timer();
+                        aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+                        aTimer.Interval = 300000; // 5 min
+                        aTimer.Enabled = true;
+
+                        while (timeout == false)
+                        {
+                            DisplayMenu();
+                            timeout = GetResponce(username, password, server, "");
+
+                        }
+                        //On Logout, clear all user credentials stored
+                        username = "";
+                        password = "";
+                        server = "";
+                    } else
+                    {
+                        Console.WriteLine("There was no valid saved connection information");
+                    }
                 }
                 else
                 {
