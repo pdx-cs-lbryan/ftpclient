@@ -11,7 +11,10 @@ namespace FtpClientApp
         private string userName;
         private string passWord;
         private string serverName;
-        private readonly string salt = "JEcv4Wqii5t";
+        private readonly byte[] v = { 0x68, 0x35, 0x54, 0x72, 0x44, 0x65, 0x77, 0x76, 0x42, 0x31, 0x69, 0x55, 0x33, 0x55, 0x50, 0x71 };
+        private readonly byte[] k = { 0x76, 0x43, 0x38, 0x58, 0x61, 0x70, 0x67, 0x33, 0x46, 0x69, 0x42, 0x49, 0x30, 0x70, 0x54, 0x74, 0x59, 0x55, 0x62, 0x76, 0x49, 0x72, 0x45, 0x64, 0x35, 0x56, 0x33, 0x33, 0x48, 0x37, 0x68, 0x62 };
+        private const string d = "dat";
+        private const string f = "dat.txt";
         #endregion
 
         #region Public Declarations
@@ -41,6 +44,122 @@ namespace FtpClientApp
             this.serverName = null;
         }
 
+        //Tests if the client has saved connection info to access
+        public bool load_saved_info()
+        {
+            String dirPath = BaseDirectory();
+            String path = GetPath();
+            
+            //return false if dir or file don't exist
+            if (!Directory.Exists(dirPath))
+            {
+                return false;
+            } else if(!File.Exists(path))
+            {
+                return false;
+            } else
+            {
+                String info = "";
+                try
+                {
+                    //get text from file
+                    System.IO.StreamReader saved = new System.IO.StreamReader(path);
+
+                    info = saved.ReadToEnd();
+                    saved.Close();
+                } catch(ArgumentException e)
+                {
+                    Console.WriteLine(e.Message);
+                    return false;
+                }  catch(FileNotFoundException e)
+                {
+                    Console.WriteLine(e.Message);
+                    return false;
+                } catch(DirectoryNotFoundException e)
+                {
+                    Console.WriteLine(e.Message);
+                    return false;
+                } catch(IOException e)
+                {
+                    Console.WriteLine(e.Message);
+                    return false;
+                }
+                
+                if(info == "")
+                {
+                    //return false if empty
+                    return false;
+                }
+                else
+                {
+                    //Get different parts of info
+                    String[] parts = info.Split('\n');
+                    if(parts.Length != 3)
+                    {
+                        return false;
+                    } else
+                    {
+                        try
+                        {
+                            //decrypt
+                            String se = parts[0];
+                            String ue = parts[1];
+                            String pe = parts[2];
+                            byte[] sbe = Convert.FromBase64String(se);
+                            byte[] ube = Convert.FromBase64String(ue);
+                            byte[] pbe = Convert.FromBase64String(pe);
+
+                            this.ServerName = Decrypt(sbe, this.k, this.v);
+                            this.UserName = Decrypt(ube, this.k, this.v);
+                            this.PassWord = Decrypt(pbe, this.k, this.v);
+                            return true;
+
+                        } catch (ArgumentNullException e)
+                        {
+                            Console.WriteLine("Invalid Number of Arguments in Saved Info File");
+                            return false;
+                        } catch (FormatException e)
+                        {
+                            Console.WriteLine("Wrong format in saved info file");
+                            return false;
+                        }
+                        
+                    }
+                }
+
+                    
+            }
+        }
+
+        //return pass for used saved info
+        public String getPass()
+        {
+            return this.passWord;
+        }
+
+        //return user name for using saved info
+        public String getUser()
+        {
+            return this.UserName;
+        }
+
+        //Return server name for loading saved info
+        public String getServer()
+        {
+            return this.serverName;
+        }
+
+        //BaseDir gets where the three info files are stored
+        private string BaseDirectory()
+        {
+            return Path.Combine(Directory.GetCurrentDirectory(), d);
+        }
+
+        private string GetPath()
+        {
+            return Path.Combine(BaseDirectory(), f);
+        }
+
         public ServerConnectionInformation(String user, String pass, String server)
         {
             this.userName = user;
@@ -50,43 +169,74 @@ namespace FtpClientApp
 
         public void Save()
         {
-            Console.WriteLine(Directory.GetCurrentDirectory());
-            string path = Directory.GetCurrentDirectory() + "connectionInfo";
-            if (!Directory.Exists(path))
-            {
-                Directory.CreateDirectory(path);
-            }
+            string dirPath = BaseDirectory();
+            string path = GetPath();
 
-            string hash1 = Hash("password");
-            string hash2 = Hash("password");
-            Console.Write("First Hash: " + hash1 + "\nHash2: " + hash2);
-            Console.WriteLine(hash1 == hash2);
+            if (!Directory.Exists(dirPath))
+            {
+                Directory.CreateDirectory(dirPath);
+            }
+            
+            byte[] temp1 = Encrypt(ServerName, k, v);
+            byte[] temp2 = Encrypt(UserName, k, v);
+            byte[] temp3 = Encrypt(PassWord, k, v);
+            File.WriteAllText(path, $"{Convert.ToBase64String(temp1)}\n{Convert.ToBase64String(temp2)}\n{Convert.ToBase64String(temp3)}");
         }
 
-        public string Hash(string password)
+        private static byte[] Encrypt(string text, byte[] Key, byte[] IV)
         {
-            Encoding encoding = Encoding.UTF8;
-            byte[] passBytes = encoding.GetBytes(password);
-            byte[] saltBytes = encoding.GetBytes(salt);
+            byte[] encryptedText;
 
-            byte[] combinedBytes = new byte[passBytes.Length + saltBytes.Length];
+            using(Aes aesAlgo = Aes.Create())
+            {
+                aesAlgo.Key = Key;
+                aesAlgo.IV = IV;
 
-            for (int i = 0; i < passBytes.Length; i++)
-            {
-                combinedBytes[i] = passBytes[i];
-            }
-            for (int i = 0; i < saltBytes.Length; i++)
-            {
-                combinedBytes[passBytes.Length + i] = saltBytes[i];
-            }
-            byte[] final;
-            using (SHA256 algorithm = SHA256.Create())
-            {
-                final = algorithm.ComputeHash(combinedBytes);
-            }
+                ICryptoTransform encryptor = aesAlgo.CreateEncryptor(aesAlgo.Key, aesAlgo.IV);
 
-            return encoding.GetString(final);
+                using(MemoryStream msEncrypt = new MemoryStream())
+                {
+                    using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor,CryptoStreamMode.Write))
+                    {
+                        using(StreamWriter swEncrypt = new StreamWriter(csEncrypt))
+                        {
+                            //Write all data
+                            swEncrypt.Write(text);
+                        }
+                        encryptedText = msEncrypt.ToArray();
+                    }
+                }
+                
+            }
+            return encryptedText;
         }
+
+        private static string Decrypt(byte[] text, byte[] Key, byte[] IV)
+        {
+            string plainText = string.Empty;
+
+            using(Aes aesAlgo = Aes.Create())
+            {
+                aesAlgo.Key = Key;
+                aesAlgo.IV = IV;
+
+                ICryptoTransform decryptor = aesAlgo.CreateDecryptor(aesAlgo.Key, aesAlgo.IV);
+
+                using(MemoryStream msDecrypt = new MemoryStream(text))
+                {
+                    using(CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
+                    {
+                        using (StreamReader scDecrypt = new StreamReader(csDecrypt))
+                        {
+                            plainText = scDecrypt.ReadToEnd();
+                        }
+                    }
+                }
+            }
+            return plainText;
+        }
+
+
     }
     #endregion
 }
