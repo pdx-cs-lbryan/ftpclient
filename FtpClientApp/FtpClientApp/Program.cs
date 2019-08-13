@@ -19,14 +19,20 @@ using System.Configuration;
 using System.Reflection;
 using System.Security.Principal;
 using System.Net.Sockets;
-using System.Threading;  // password
+using System.Threading;  // passwordusing System.Timers;
+using System.Timers; //Timer
 using FtpClientApp;
 
 namespace FtpClient
 {
     public class FtpClientMain
     {
-        static void Main(string[] args)
+        private static System.Timers.Timer aTimer;
+        private static bool timeout;
+        private static String username;
+        private static String password;
+        private static String server;
+        static void Main()
         {
             // Press Ctrl+F5 (or go to Debug > Start Without Debugging) to run your app.
             Console.WriteLine("  Welcome to FTPClient \n");
@@ -55,7 +61,7 @@ namespace FtpClient
                     Console.WriteLine("Enter your FTP server password\n");
                     password = Console.ReadLine();
 
-                    bool timeout = false;
+                    timeout = false;
                     /**
                      * TO IMPLEMENT: LOG - IN
                      * Use the above info to try making a request to the server
@@ -72,11 +78,18 @@ namespace FtpClient
                      * if the input option is set to the log out option, set timeout to false
                      */
 
-                    while (timeout == false)
-                    {
-                        DisplayMenu();
-                        timeout = GetResponce(username, password, server, MyLogFile);
+                    System.Timers.Timer aTimer = new System.Timers.Timer();
+                    aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+                    aTimer.Interval = 300000; // 5 min
+                    aTimer.Enabled = true;
+                    //aTimer.Stop();
+                    //aTimer.Dispose();
 
+                    while (timeout == false) 
+                    {   
+                        DisplayMenu();
+			timeout = GetResponce(username, password, server, "", MyLogFile);
+                    
                         //TIMEOUT -- probably want to do timeout check here
                     }
                     //On Logout, clear all user credentials stored
@@ -97,6 +110,28 @@ namespace FtpClient
             MyLogFile.EndLog();
         } // end Main()
 
+        private static void OnTimedEvent(object source, ElapsedEventArgs e)//Reference: https://docs.microsoft.com/en-us/dotnet/api/system.timers.timer?view=netframework-4.8
+        {
+            
+            ServerConnectionInformation conn = new ServerConnectionInformation(username, password, server);
+            Console.WriteLine(" You chose 3, List Files In Directory:  \n");
+            ListFiles listFiles = new ListFiles(conn);
+            String response3 = listFiles.ListFilesOnRemoteServer();
+            if (response3 == "success")
+            {
+                Console.Write("Success: Still connected to server \n");
+                timeout = false;
+                DisplayMenu();
+                return;
+            }
+            else
+            {
+                Console.Write("Error: not connected to server");
+                System.Environment.Exit(1);
+            }
+            
+        }
+
 
         public static void DisplayMenu()
         {
@@ -110,19 +145,24 @@ namespace FtpClient
             Console.WriteLine("7) Rename file on Remote Server");
             Console.WriteLine("8) List Files Local");
             Console.WriteLine("9) Copy Directory (files & subdirectory) to Remote Server");
-            Console.WriteLine("10) Logout from Server \n");
+            Console.WriteLine("10) Put multiple files on Remote Server");
+            Console.WriteLine("11) Save Connection Information");
+            Console.WriteLine("12) Logout from Server \n");
 
+            
         } // end DisplayMenu()
 
-        public static bool GetResponce(String username, String password, String server, LogFiles MyLogFile)
+        public static bool GetResponce(String username, String password, String server, String getAnswer, LogFiles MyLogFile)
         {
-            string getAnswer = "";
+            //string getAnswer = "";
             bool MyAnswer = false;
             getAnswer = Console.ReadLine();
             ServerConnectionInformation conn = new ServerConnectionInformation(username, password, server);
+
             switch (getAnswer)
             {
-                case "10":
+                case "12":
+                    //Log our of server
                     Console.Clear();
                     Console.Write(username);
                     Console.WriteLine(" Logged out from server! \n");
@@ -130,6 +170,38 @@ namespace FtpClient
                     Console.WriteLine(" ########################################### \n");
                     //Set response to 'true' to logout
                     MyAnswer = true;
+                    break;
+                case "11":
+                    //save connection information
+                    Console.Clear();
+                    conn.Save();
+                    Console.WriteLine("Connection Info Saved.");
+                    System.Threading.Thread.Sleep(2000);
+                    Console.Clear();
+                    MyLogFile.WriteLog("Connection Info Saved.");
+                    MyAnswer = false;
+                    break;
+                case "10":
+                    //Put Multiple files on remote server
+                    PutMultipleFiles PutFilesToRemote = new PutMultipleFiles(conn);
+                    Console.WriteLine(" \n ** Specify local directory path of files to be uploaded \n (Mention absolute path in this format, for ex: C:/xyz/test/ ** \n");
+                    String sourcefile_m = PutFilesToRemote.getFileName();
+                    Console.WriteLine(" \n ** Specify files to be uploaded from aforementioned path. (Mention each file name separated by a comma. for ex: abc.txt, xyz.png, 123.txt). Filetypes accepted: .txt, .jpg, .png ** \n");
+                    String inputfilenames_m = PutFilesToRemote.getFileName();
+                    Console.WriteLine(" \n ** Specify directory name on server where source directory is to be copied (for ex: test). \n");
+                    String destinationfileonserver_m = PutFilesToRemote.getFileName();
+                    String res_m = PutFilesToRemote.CopyFiles(sourcefile_m, destinationfileonserver_m, inputfilenames_m);
+                    if (res_m == "success")
+                    {
+                        Console.Write("\n **** Uploade files complete. Please check messages for further info **** \n \n");
+                        MyLogFile.WriteLog(" Uploade files complete " );
+                    }
+                    else
+                    {
+                        Console.Write("\n **** Could not upload files due to an error: \n" + res_m + "\n");
+                        MyLogFile.WriteLog("Could not upload files due to an error: " + res_m);
+                    }
+                    MyAnswer = false;
                     break;
                 case "9":
                     //Copy Directory (including all files and subdirectory)

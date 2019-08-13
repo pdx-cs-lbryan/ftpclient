@@ -15,23 +15,23 @@ namespace FtpClientApp
         public void StartLog()
         {
             TextWriter w = ftpLog;
-            w.WriteLine("=============================================================");
-            w.WriteLine("Begin Log", DateTime.Now.ToString("yyyyMMdd-HH:mm:ss"));
+            w.WriteLine("========================================================");
+            w.WriteLine("Begin Log " + DateTime.Now.ToString("yyyyMMdd-HH:mm:ss"));
 
         }
 
         public void WriteLog(string logMessage)
         {
             TextWriter w = ftpLog;
-            w.WriteLine(DateTime.Now.ToString("yyyyMMdd-HH:mm:ss"), logMessage);
+            w.WriteLine(DateTime.Now.ToString("yyyyMMdd-HH:mm:ss") + " " + logMessage );
 
         }
 
         public void EndLog()
         {
             TextWriter w = ftpLog;
-            w.WriteLine("End Log" + DateTime.Now.ToString("yyyyMMdd-HH:mm:ss"));
-            w.WriteLine("=============================================================");
+            w.WriteLine("End Log " + DateTime.Now.ToString("yyyyMMdd-HH:mm:ss"));
+            w.WriteLine("========================================================");
 
             w.Close();
         }
