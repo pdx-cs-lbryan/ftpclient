@@ -44,6 +44,111 @@ namespace FtpClientApp
             this.serverName = null;
         }
 
+        //Tests if the client has saved connection info to access
+        public bool load_saved_info()
+        {
+            String dirPath = BaseDirectory();
+            String path = GetPath();
+            
+            //return false if dir or file don't exist
+            if (!Directory.Exists(dirPath))
+            {
+                return false;
+            } else if(!File.Exists(path))
+            {
+                return false;
+            } else
+            {
+                String info = "";
+                try
+                {
+                    //get text from file
+                    System.IO.StreamReader saved = new System.IO.StreamReader(path);
+
+                    info = saved.ReadToEnd();
+                    saved.Close();
+                } catch(ArgumentException e)
+                {
+                    Console.WriteLine(e.Message);
+                    return false;
+                }  catch(FileNotFoundException e)
+                {
+                    Console.WriteLine(e.Message);
+                    return false;
+                } catch(DirectoryNotFoundException e)
+                {
+                    Console.WriteLine(e.Message);
+                    return false;
+                } catch(IOException e)
+                {
+                    Console.WriteLine(e.Message);
+                    return false;
+                }
+                
+                if(info == "")
+                {
+                    //return false if empty
+                    return false;
+                }
+                else
+                {
+                    //Get different parts of info
+                    String[] parts = info.Split('\n');
+                    if(parts.Length != 3)
+                    {
+                        return false;
+                    } else
+                    {
+                        try
+                        {
+                            //decrypt
+                            String se = parts[0];
+                            String ue = parts[1];
+                            String pe = parts[2];
+                            byte[] sbe = Convert.FromBase64String(se);
+                            byte[] ube = Convert.FromBase64String(ue);
+                            byte[] pbe = Convert.FromBase64String(pe);
+
+                            this.ServerName = Decrypt(sbe, this.k, this.v);
+                            this.UserName = Decrypt(ube, this.k, this.v);
+                            this.PassWord = Decrypt(pbe, this.k, this.v);
+                            return true;
+
+                        } catch (ArgumentNullException e)
+                        {
+                            Console.WriteLine("Invalid Number of Arguments in Saved Info File");
+                            return false;
+                        } catch (FormatException e)
+                        {
+                            Console.WriteLine("Wrong format in saved info file");
+                            return false;
+                        }
+                        
+                    }
+                }
+
+                    
+            }
+        }
+
+        //return pass for used saved info
+        public String getPass()
+        {
+            return this.passWord;
+        }
+
+        //return user name for using saved info
+        public String getUser()
+        {
+            return this.UserName;
+        }
+
+        //Return server name for loading saved info
+        public String getServer()
+        {
+            return this.serverName;
+        }
+
         //BaseDir gets where the three info files are stored
         private string BaseDirectory()
         {
