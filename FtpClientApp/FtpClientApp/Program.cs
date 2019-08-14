@@ -160,8 +160,9 @@ namespace FtpClient
             Console.WriteLine("9) Rename local file");
             Console.WriteLine("10) Copy Directory (files & subdirectory) to Remote Server");
             Console.WriteLine("11) Put multiple files on Remote Server");
-            Console.WriteLine("12) Save Connection Information");
-            Console.WriteLine("13) Logout from Server \n");
+            Console.WriteLine("12) Get multiple files on Remote Server");
+            Console.WriteLine("13) Save Connection Information");
+            Console.WriteLine("14) Logout from Server \n");
 
             
         } // end DisplayMenu()
@@ -175,7 +176,7 @@ namespace FtpClient
 
             switch (getAnswer)
             {
-                case "13":
+                case "14":
                     Console.Clear();
                     Console.Write(username);
                     Console.WriteLine(" Logged out from server! \n");
@@ -183,12 +184,26 @@ namespace FtpClient
                     //Set response to 'true' to logout
                     MyAnswer = true;
                     break;
-                case "12":
+                case "13":
                     Console.Clear();
                     conn.Save();
                     Console.WriteLine("Connection Info Saved.");
                     System.Threading.Thread.Sleep(2000);
                     Console.Clear();
+                    MyAnswer = false;
+                    break;
+                case "12":
+                    Console.Clear();
+                    FileDownloadMultiple fdm = new FileDownloadMultiple(conn);
+                    string r = fdm.Download();
+                    if (r == "disconnect")
+                    {
+                        Console.WriteLine("Download Files Failed\n");
+                    }
+                    else if(r == "success")
+                    {
+                        Console.WriteLine("Download Files Successful\n");
+                    }
                     MyAnswer = false;
                     break;
                 case "11":
