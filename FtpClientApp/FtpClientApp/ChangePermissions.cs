@@ -72,6 +72,9 @@ namespace FtpClientApp
             wrapper.setPermission(int.Parse(value));
         }
 
+        /*
+         * Checks if the input is valid
+         */
         public bool checkInput(String value)
         {
             bool ready = true;
