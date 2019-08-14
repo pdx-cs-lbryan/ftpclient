@@ -21,14 +21,12 @@ namespace FtpClientApp
         {
             string downloadLocation = "";
             downloadLocation = getDownloadPath();
+            if (downloadLocation == "")
+            {
+                Console.Clear();
+                return "disconnect";
+            }
 
-            string direcoryName = "";
-            Console.WriteLine("Please enter the directory name on the server:");
-            direcoryName = Console.ReadLine();
-          
-            String directoryPath = Path.Combine(connection.ServerName, direcoryName);
-            Console.WriteLine(connection.ServerName);
-            Console.WriteLine(directoryPath);
             List<string> files = new List<string>();
 
             try
@@ -43,7 +41,6 @@ namespace FtpClientApp
                 string line = streamReader.ReadLine();
                 while (!string.IsNullOrEmpty(line))
                 {
-                    //Console.WriteLine(line); //output for testing
                     files.Add(line);
                     line = streamReader.ReadLine();
                 }
@@ -52,72 +49,123 @@ namespace FtpClientApp
             catch (WebException e)
             {
                 Console.WriteLine("\n" + e.Message.ToString());
-                System.Threading.Thread.Sleep(5000);
+                PressAnyKeyToContinue();
                 Console.Clear();
                 return "disconnect";
             }
             catch (Exception e)
             {
                 Console.WriteLine("\n"+e.Message.ToString());
-                System.Threading.Thread.Sleep(5000);
+                PressAnyKeyToContinue();
                 Console.Clear();
                 return "disconnect";
             }
 
+            byte[] buffer = new byte[2048];
+            int bytesRead = 0;
             try
             {
-                using (WebClient client = new WebClient())
-                {
-                    client.Credentials = new NetworkCredential(connection.UserName, connection.PassWord);
+                FtpWebRequest myServerConnectionRequest = (FtpWebRequest)WebRequest.Create(connection.ServerName);
+                myServerConnectionRequest.Credentials = new NetworkCredential(connection.UserName, connection.PassWord);
+                myServerConnectionRequest.Proxy = null;
+                myServerConnectionRequest.UsePassive = true;
+                myServerConnectionRequest.UseBinary = true;
+                myServerConnectionRequest.KeepAlive = true;
 
-                    foreach (var file in files)
+                foreach (var file in files)
+                {
+                    if (file.Contains("."))
                     {
-                        if (file.Contains("."))
+                        String location = Path.Combine(downloadLocation, file.ToString());
+                        Stream StreamReader = myServerConnectionRequest.GetResponse().GetResponseStream();
+                        FileStream myFileStream = new FileStream(location, FileMode.Create);
+
+                        while (true)
                         {
-                            String path = Path.Combine(connection.ServerName, file.ToString());
-                            String location = Path.Combine(connection.ServerName, file.ToString());
-                            client.DownloadFile(path, location);
+                            bytesRead = StreamReader.Read(buffer, 0, buffer.Length);
+
+                            if (bytesRead == 0)
+                            {
+                                break;
+                            }
+                            myFileStream.Write(buffer, 0, bytesRead);
                         }
                     }
                 }
+                
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message.ToString());
+                PressAnyKeyToContinue();
+                Console.Clear();
                 return "disconnect";
             }
+            Console.Clear();
             return "success";
         }
 
         public string getDownloadPath()
         {
-            bool done = false;
             string path = "";
-            string answer = "";
+            bool found = false;
 
             Console.WriteLine("Please enter your download location: ");
             Console.WriteLine("Example: c:\\Download: \nLocation must exist");
 
-            bool found = false;
             while(!found)
             {
                 path = Console.ReadLine();
                 if (path == "")
                 {
                     Console.WriteLine("Local File Path Entered is blank, Please try again ");
+                    Console.WriteLine("Enter N to enter a new location OR Enter Q to disconnect");
+                    string user = Console.ReadLine();
+                    if (user == "N")
+                    {
+                        Console.WriteLine("Please enter your down location: \nExample: c:\\Downloads");
+                    }
+                    else if (user == "Q")
+                    {
+                        return "";
+                    }
+                    else
+                    {
+                        Console.WriteLine("Value Not Understood.");
+                        Console.WriteLine("Please enter your down location: \nExample: c:\\Downloads");
+                    }
+                    
                 }
                 else if (!Directory.Exists(path))
                 {
                     Console.WriteLine("Directory does not exsist.");
+                    Console.WriteLine("Enter N to enter a new location OR Enter Q to disconnect");
+                    string user = Console.ReadLine();
+                    if (user == "N")
+                    {
+                        Console.WriteLine("Please enter your down location: \nExample: c:\\Downloads");
+                    }
+                    else if (user == "Q")
+                    {
+                        return "";
+                    }
+                    else
+                    {
+                        Console.WriteLine("Value Not Understood.");
+                        Console.WriteLine("Please enter your down location: \nExample: c:\\Downloads");
+                    }
                 }
                 else
                 {
                     found = true;
-                }
-                    
+                }  
             }
-            
             return path;
+        }
+        public void PressAnyKeyToContinue()
+        {
+            Console.WriteLine("Press Any Key to Continue");
+            Console.ReadLine();
         }
     }
 }
