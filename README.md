@@ -30,23 +30,10 @@ https://docs.microsoft.com/en-us/nuget/consume-packages/install-use-packages-vis
 
 fakeiteasy should be version 5.1.1 and fluentftp version 27.0
 
-From the command line: (Is this still relevant given the libraries???)
 
-```
-$ cd ftpclient/FtpClientApp/FtpClientApp
-```
+A log file will be kept in the directory where the application is launched.
 
- compile the following files:
 
-```
-$ csc *.cs
-```
-
-and then run it:
-
-```
-$ mono Program.exe
-```
 
 ## Setting Up, Running, and Removing the Installer (Written for and Tested on Windows 10)
 
