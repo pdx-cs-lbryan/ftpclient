@@ -53,6 +53,10 @@ namespace FtpClientApp
                 myServerConnectionRequest.KeepAlive = true;
 
                 myServerConnectionRequest.Method = WebRequestMethods.Ftp.DownloadFile;
+                if(Directory.Exists(Path.GetDirectoryName(DownloadDirectory + "/" + FileName)) == false)
+                {
+                    Directory.CreateDirectory(Path.GetDirectoryName(DownloadDirectory + "/" + FileName));
+                }
 
                 Stream StreamReader = myServerConnectionRequest.GetResponse().GetResponseStream();
                 FileStream myFileStream = new FileStream(DownloadDirectory+"/"+FileName, FileMode.Create);
