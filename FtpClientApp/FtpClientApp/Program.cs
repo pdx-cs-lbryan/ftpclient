@@ -439,10 +439,27 @@ namespace FtpClient
                     MyAnswer = false;
                     break;
                 case "1":
-                      //File download
+                    //File download
                     Console.WriteLine(" You choose 1, download File, in devl \n");
+
+                    Console.WriteLine("Please Enter the file to download:");
+                    string f = Console.ReadLine();
+                    if (String.IsNullOrEmpty(f))
+                    {
+                        Console.WriteLine("File cannot be empty\n");
+                        break;
+                    }
+
+                    Console.WriteLine("Please Enter the Download Location: ");
+                    string l = Console.ReadLine();
+                    if (String.IsNullOrEmpty(l))
+                    {
+                        Console.WriteLine("Download Location cannot be empty\n");
+                        break;
+                    }
+
                     FileDownload RemoteFileDownload = new FileDownload(conn);
-                    String response4 = RemoteFileDownload.FileDownloadFromRemote(conn);
+                    String response4 = RemoteFileDownload.FileDownloadFromRemote(conn, f, l);
                     if (response4 == "success")
                     {
                         Console.Write("File downloaded!\n");

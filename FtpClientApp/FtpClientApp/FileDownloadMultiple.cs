@@ -12,102 +12,105 @@ namespace FtpClientApp
     {
         private ServerConnectionInformation connection;
 
+        //constructor that pulls in the connection info and assigns it
         public FileDownloadMultiple(ServerConnectionInformation conn)
         {
             connection = conn;
         }
 
+        //main method to call to start the download
         public String Download()
         {
+            Console.Clear();
+
+            bool done = false;
+            int numFiles = 0;
+            List<string> fileList = new List<string>();
+
+            //loop asking for files until the user says they are done
+            while (!done)
+            {
+                string newFile = "";
+                if (numFiles == 0)
+                {
+                    Console.WriteLine("Please enter the first file");
+                }
+                else
+                {
+                    Console.WriteLine("Please enter the next file");
+                }
+                newFile = Console.ReadLine();
+
+                if (string.IsNullOrEmpty(newFile))
+                {
+                    Console.WriteLine("File cannot be empty");
+                }
+                else
+                {
+                    numFiles += 1;
+                    fileList.Add(newFile);
+                }
+
+                //check if the user wants to keep entering files
+                Console.WriteLine("Press Enter to enter another file or Q to quit");
+                string ans = Console.ReadLine();
+                if (ans == "Q" || ans == "q")
+                {
+                    done = true;
+                }
+
+                Console.Clear();
+            }
+
+            //output the files that are going to be downloaded
+            Console.WriteLine("Downloading these files:");
+            foreach(var file in fileList)
+            {
+                Console.WriteLine(file);
+            }
+
+            //get download path
             string downloadLocation = "";
             downloadLocation = getDownloadPath();
-            if (downloadLocation == "")
+
+            //count of how many files completed
+            int count = 0;
+
+            //make sure at least one file is entered
+            if (fileList.Count > 0)
             {
-                Console.Clear();
-                return "disconnect";
-            }
-
-            List<string> files = new List<string>();
-            Console.WriteLine("Downloading from "+connection.ServerName);
-
-            try
-            {
-                FtpWebRequest ftpRequest = (FtpWebRequest)WebRequest.Create(connection.ServerName);
-                ftpRequest.Credentials = new NetworkCredential(connection.UserName, connection.PassWord);
-                ftpRequest.KeepAlive = false;
-                ftpRequest.UsePassive = true;
-                ftpRequest.Proxy = null;
-                ftpRequest.UseBinary = true;
-                ftpRequest.Method = WebRequestMethods.Ftp.ListDirectory;
-                FtpWebResponse response = (FtpWebResponse)ftpRequest.GetResponse();
-                StreamReader streamReader = new StreamReader(response.GetResponseStream());
-
-                //populate file list
-                string line = streamReader.ReadLine();
-                while (!string.IsNullOrEmpty(line))
+                FileDownload fd = new FileDownload(connection);
+                foreach (var file in fileList)
                 {
-                    files.Add(line);
-                    line = streamReader.ReadLine();
+                    string response = fd.FileDownloadFromRemote(connection, file, downloadLocation);
+                    if (response == "success") { count += 1; }
                 }
-                streamReader.Close();
             }
-            catch (WebException e)
+            else
             {
-                Console.WriteLine("\n" + e.Message.ToString());
-                PressAnyKeyToContinue();
-                Console.Clear();
-                return "disconnect";
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("\n"+e.Message.ToString());
-                PressAnyKeyToContinue();
-                Console.Clear();
                 return "disconnect";
             }
 
-            byte[] buffer = new byte[2048];
-            int bytesRead = 0;
-            try
+            //check all files were downloaded
+            if (count == fileList.Count)
             {
-                FtpWebRequest myServerConnectionRequest = (FtpWebRequest)WebRequest.Create(connection.ServerName);
-                myServerConnectionRequest.Credentials = new NetworkCredential(connection.UserName, connection.PassWord);
-                myServerConnectionRequest.Proxy = null;
-                myServerConnectionRequest.UsePassive = true;
-                myServerConnectionRequest.UseBinary = true;
-                myServerConnectionRequest.KeepAlive = true;
-
-                foreach (var file in files)
+                return "success";
+            }
+            else
+            {
+                Console.Write($"{count}");
+                if (count == 1)
                 {
-                    if (file.Contains("."))
-                    {
-                        String location = Path.Combine(downloadLocation, file.ToString());
-                        Stream StreamReader = myServerConnectionRequest.GetResponse().GetResponseStream();
-                        FileStream myFileStream = new FileStream(location, FileMode.Create);
-
-                        while (true)
-                        {
-                            bytesRead = StreamReader.Read(buffer, 0, buffer.Length);
-
-                            if (bytesRead == 0)
-                            {
-                                break;
-                            }
-                            myFileStream.Write(buffer, 0, bytesRead);
-                        }
-                    }
+                    Console.Write(" file");
                 }
-                
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message.ToString());
-                PressAnyKeyToContinue();
-                Console.Clear();
+                else
+                {
+                    Console.Write(" files");
+                }
+                Console.WriteLine(" successfully downloaded");
+                System.Threading.Thread.Sleep(3000);
                 return "disconnect";
             }
-            Console.Clear();
-            return "success";
         }
 
         public string getDownloadPath()
