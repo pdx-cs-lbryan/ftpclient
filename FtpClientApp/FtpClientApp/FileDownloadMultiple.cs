@@ -28,11 +28,16 @@ namespace FtpClientApp
             }
 
             List<string> files = new List<string>();
+            Console.WriteLine("Downloading from "+connection.ServerName);
 
             try
             {
                 FtpWebRequest ftpRequest = (FtpWebRequest)WebRequest.Create(connection.ServerName);
                 ftpRequest.Credentials = new NetworkCredential(connection.UserName, connection.PassWord);
+                ftpRequest.KeepAlive = false;
+                ftpRequest.UsePassive = true;
+                ftpRequest.Proxy = null;
+                ftpRequest.UseBinary = true;
                 ftpRequest.Method = WebRequestMethods.Ftp.ListDirectory;
                 FtpWebResponse response = (FtpWebResponse)ftpRequest.GetResponse();
                 StreamReader streamReader = new StreamReader(response.GetResponseStream());
@@ -110,7 +115,7 @@ namespace FtpClientApp
             string path = "";
             bool found = false;
 
-            Console.WriteLine("Please enter your download location: ");
+            Console.WriteLine("Please enter Download Location on Local Machine: ");
             Console.WriteLine("Example: c:\\Download: \nLocation must exist");
 
             while(!found)
