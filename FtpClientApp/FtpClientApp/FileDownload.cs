@@ -46,7 +46,7 @@ namespace FtpClientApp
                 myServerConnectionRequest.Method = WebRequestMethods.Ftp.DownloadFile;
 
                 Stream StreamReader = myServerConnectionRequest.GetResponse().GetResponseStream();
-                FileStream myFileStream = new FileStream(DownloadDirectory+FileName, FileMode.Create);
+                FileStream myFileStream = new FileStream(DownloadDirectory+"/"+FileName, FileMode.Create);
 
                 while (true)
                 {
