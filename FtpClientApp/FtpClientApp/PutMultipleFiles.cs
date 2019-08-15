@@ -22,22 +22,34 @@ namespace FtpClientApp
 
         }
 
+        /*
+         * Sets the class' request
+         */
         public void setRequest(FtpWebRequest req)
         {
             this.request = req;
         }
 
+        /*
+         * Sets the class wrapper
+         */
         public void setWrapper(FtpTestWrapper wrapper)
         {
             this.wrapper = wrapper;
         }
 
+        /*
+         * Gets the file name from the user
+         */
         public String getFileName()
         {
             String filepath = Console.ReadLine();
             return filepath;
         }
 
+        /*
+         * Copies given files from the source to the destination directory
+         */
         public string CopyFiles(
             string sourceDirName, string destDirName, string inputfilenames)
         {
@@ -125,6 +137,9 @@ namespace FtpClientApp
             return "success";
         }
 
+        /*
+         * Makes FTP request to the server via wrapper
+         */
         public String create(FTPTestWrapperAbstract wrapper)
         {
             try

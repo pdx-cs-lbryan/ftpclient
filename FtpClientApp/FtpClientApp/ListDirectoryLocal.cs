@@ -5,8 +5,15 @@ using System.Text;
 
 namespace FtpClientApp
 {
+
+    /*
+     * Class for listing the files of a local directory
+     */
     public class ListDirectoryLocal
     {
+        /*
+         * Takes in a string for a directory to list. Returns true for success, false otherwise.
+         */
         public bool ListDirectory(string Dir)
         {
             bool success=false;
@@ -44,6 +51,10 @@ namespace FtpClientApp
             success = true;
             return success;
         }
+
+        /*
+         * Gets file information from the file passed in and writes it out to the console.
+         */
         public void ListFile(string file)
         {
             FileInfo info = new FileInfo(file);

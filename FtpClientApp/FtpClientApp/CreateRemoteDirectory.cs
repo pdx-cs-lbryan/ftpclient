@@ -20,11 +20,17 @@ namespace FtpClientApp
 
         }
 
+        /*
+         * Function for setting the class' FTP wrapper to the given wrapper
+         */
         public void setWrapper(FtpTestWrapper wrapper)
         {
             this.wrapper = wrapper;
         }
 
+        /*
+         * Function for setting the class' request to the given request
+         */
         public void setRequest(FtpWebRequest req)
         {
             this.request = req;
@@ -38,6 +44,9 @@ namespace FtpClientApp
             return dir;
         }
 
+        /*
+         * Takes in a string to use to create a new directory on the remote server
+         */
         public String setup(String dir)
         {
             bool testValid = validDir(dir);
@@ -71,6 +80,9 @@ namespace FtpClientApp
             }
         }
 
+        /*
+         * Function for determining if a directory string is valid
+         */
         public bool validDir(String dir)
         {
             //check for invalid characters
@@ -86,6 +98,9 @@ namespace FtpClientApp
             return true;
         }
 
+        /*
+         * Returns the class' FTP wrapper
+         */
         public FtpTestWrapper getWrapper()
         {
             return this.wrapper;

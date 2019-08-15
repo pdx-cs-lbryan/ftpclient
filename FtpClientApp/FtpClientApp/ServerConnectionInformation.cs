@@ -5,6 +5,10 @@ using System.Text;
 
 namespace FtpClientApp
 {
+
+    /*
+     * Class for holding connection information, using it, and storing it.
+     */
     public class ServerConnectionInformation
     {
         #region Private Member Variables
@@ -21,22 +25,35 @@ namespace FtpClientApp
         #endregion
 
         #region Public Properties
+
+        /*
+         * Functions for getting and setting the username
+         */
         public string UserName
         {
             get { return userName; }
             set { userName = value; }
         }
+
+        /*
+         * Functions for getting and setting the password
+         */
         public string PassWord
         {
             get { return passWord; }
             set { passWord = value; }
         }
+
+        /*
+         * Functions for getting and setting the servername
+         */
         public string ServerName
         {
             get { return serverName; }
             set { serverName = value; }
         }
 
+        //Constructor to set everything to null
         public ServerConnectionInformation()
         {
             this.userName = null;
@@ -155,11 +172,13 @@ namespace FtpClientApp
             return Path.Combine(Directory.GetCurrentDirectory(), d);
         }
 
+        //Returns path of file
         private string GetPath()
         {
             return Path.Combine(BaseDirectory(), f);
         }
 
+        //Constructor with parameters for name, pass, and server given
         public ServerConnectionInformation(String user, String pass, String server)
         {
             this.userName = user;
@@ -167,10 +186,15 @@ namespace FtpClientApp
             this.serverName = server;
         }
 
+        /*
+         * Saves user information to a file in Base64String from encrypted bytes
+         */
         public void Save()
         {
             string dirPath = BaseDirectory();
             string path = GetPath();
+
+            try { 
 
             if (!Directory.Exists(dirPath))
             {
@@ -181,8 +205,17 @@ namespace FtpClientApp
             byte[] temp2 = Encrypt(UserName, k, v);
             byte[] temp3 = Encrypt(PassWord, k, v);
             File.WriteAllText(path, $"{Convert.ToBase64String(temp1)}\n{Convert.ToBase64String(temp2)}\n{Convert.ToBase64String(temp3)}");
+
+            } catch (Exception e)
+            {
+                Console.WriteLine("Could not store connection info: " + e.Message);
+            }
         }
 
+        /*
+         * Encrypt a text with a key and IV byte arrays.
+         * Based on documentation from Microsoft:https://docs.microsoft.com/en-us/dotnet/api/system.security.cryptography.aes?view=netframework-4.8
+         */
         private static byte[] Encrypt(string text, byte[] Key, byte[] IV)
         {
             byte[] encryptedText;
@@ -211,6 +244,11 @@ namespace FtpClientApp
             return encryptedText;
         }
 
+
+        /*
+         * Function for decrypting text as bytes from a key and IV byte array
+         * Based on documentation from Microsoft: https://docs.microsoft.com/en-us/dotnet/api/system.security.cryptography.aes?view=netframework-4.8
+         */
         private static string Decrypt(byte[] text, byte[] Key, byte[] IV)
         {
             string plainText = string.Empty;

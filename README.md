@@ -1,5 +1,13 @@
 # FTP Client
 
+Team Members:<br>
+Marcella Billett: mbillett<br>
+Saraswathi Datar: saraswathidatar<br>
+Colin Gregory: c-gregory<br>
+Bryan Logan: pdx-cs-lbryan<br>
+Dennis Mesanovic: dmesa2<br>
+
+
 Recreation of CS410/510 Agile Summer 2019 Group 7 FTP Repository.<br>
 **Please visit this link for the original repository and its commit history**: https://github.com/mbillett/ftpClient<br>
 **See our trello board here**: https://trello.com/b/Ev8rTDfC/agileftp
@@ -81,7 +89,7 @@ Double click the file to begin the installation.
 
 8. The installation files will be located in your default location for 32 bit applications (likely Program Files (x86)). Look for:
 
-'FtpClientApp.exe' to run the program.
+'FtpClientApp.exe' to run the program. Run the program as an administrator.
 
 9. To uninstall, go to "Apps and Features" in the Windows' settings and uninstall "Team 7 FTP Client"
 
@@ -91,4 +99,5 @@ Double click the file to begin the installation.
 
 1.) https://docs.microsoft.com/en-us/dotnet/api/system.net.ftpwebrequest?view=netframework-4.8 <br>
 2.) The following video was used as a reference in creating the installer: AngelSix - How To Create Windows Installer MSI - .Net Core Wix: https://www.youtube.com/watch?v=6Yf-eDsRrnM in addition to Wix Documentation: https://wixtoolset.org/documentation/ <br>
-3.) Timer: https://docs.microsoft.com/en-us/dotnet/api/system.timers.timer?view=netframework-4.8
+3.) Timer: https://docs.microsoft.com/en-us/dotnet/api/system.timers.timer?view=netframework-4.8<br>
+4.) Encryption: https://docs.microsoft.com/en-us/dotnet/api/system.security.cryptography.aes?view=netframework-4.8

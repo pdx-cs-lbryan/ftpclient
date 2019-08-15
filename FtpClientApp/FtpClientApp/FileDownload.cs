@@ -81,7 +81,11 @@ namespace FtpClientApp
                         return "The server sent an error code of 550. The file may not exist.";
                     }
                     return e.Message.ToString();
-                }
+                } catch(Exception e)
+            {
+                myConnection.ServerName = rememberServer;
+                return e.Message.ToString();
+            }
 
             
 
