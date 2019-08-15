@@ -207,10 +207,12 @@ namespace FtpClient
                     if (r == "disconnect")
                     {
                         Console.WriteLine("Download Files Failed\n");
+                        MyLogFile.WriteLog(username + " downloading files failed");
                     }
                     else if(r == "success")
                     {
                         Console.WriteLine("Download Files Successful\n");
+                        MyLogFile.WriteLog(username + " downloading files successful");
                     }
                     MyAnswer = false;
                     break;
