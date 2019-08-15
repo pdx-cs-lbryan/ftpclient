@@ -4,6 +4,9 @@ using System.Net;
 
 namespace FtpClientApp
 {
+    /*
+     * Class for downloading a file from the remote server
+     */
     public class FileDownload
     {
 
@@ -12,31 +15,33 @@ namespace FtpClientApp
 
         private FtpTestWrapper wrapper;
     
+        /*
+         * Constructor with a SCI to set
+         */
         public FileDownload(ServerConnectionInformation toUse)
         {
             this.connection = toUse;
         }
+
+        //sets the class' request to the given FtpWebRequest
         public void setRequest(FtpWebRequest req)
         {
             this.request = req;
         }
 
+        //sets class' ftp wrapper to the one given
         public void setWrapper(FtpTestWrapper wrapper)
         {
             this.wrapper = wrapper;
         }
-        public String FileDownloadFromRemote(ServerConnectionInformation myConnection)
-        {   //for test
-            //myConnection.ServerName = "ftp://speedtest.tele2.net";
-            //myConnection.UserName = "anonymous";
-            //myConnection.PassWord = "anonymous";
 
-            string FileName = "1KB.zip";
-            FileName = getFileName(myConnection);
+        //Method for downloading a file. Takes in a connection, a file name to get, and a directory to store the file in
+        public String FileDownloadFromRemote(ServerConnectionInformation myConnection, string FileName, string DownloadDirectory)
+        {   
 
-            string DownloadDirectory = "c:/download";
-            DownloadDirectory = getDownLoadPath(FileName);
-
+            String rememberServer = myConnection.ServerName;
+            myConnection.ServerName = myConnection.ServerName + '/' + FileName;
+            
             int bytesRead = 0;
             byte[] buffer = new byte[2048];
             try{
@@ -48,9 +53,13 @@ namespace FtpClientApp
                 myServerConnectionRequest.KeepAlive = true;
 
                 myServerConnectionRequest.Method = WebRequestMethods.Ftp.DownloadFile;
+                if(Directory.Exists(Path.GetDirectoryName(DownloadDirectory + "/" + FileName)) == false)
+                {
+                    Directory.CreateDirectory(Path.GetDirectoryName(DownloadDirectory + "/" + FileName));
+                }
 
                 Stream StreamReader = myServerConnectionRequest.GetResponse().GetResponseStream();
-                FileStream myFileStream = new FileStream(DownloadDirectory, FileMode.Create);
+                FileStream myFileStream = new FileStream(DownloadDirectory+"/"+FileName, FileMode.Create);
 
                 while (true)
                 {
@@ -60,12 +69,13 @@ namespace FtpClientApp
 
                     myFileStream.Write(buffer, 0, bytesRead);
                 }
-            
+                myConnection.ServerName = rememberServer;
                 myFileStream.Close();
                 StreamReader.Close();
                 return "success";
                 }
                 catch(WebException e){
+                    myConnection.ServerName = rememberServer;
                     if (e.Message.ToString().Equals("The remote server returned an error: (550) File unavailable (e.g., file not found, no access)."))
                     {
                         return "The server sent an error code of 550. The file may not exist.";
@@ -73,71 +83,14 @@ namespace FtpClientApp
                     return e.Message.ToString();
                 }
 
+            
+
         } // end FileDownload()
 
 
-        public string getFileName(ServerConnectionInformation myConnection)
-        {
-            bool LetsContinueLoop = true;
-            string myAnswer = "";
-            string FileName = "";
-
-            Console.WriteLine("\nPlease enter the File to Download: ");
- 
-            do
-            {
-                FileName = Console.ReadLine();
-                while (FileName == "")
-                {
-                    Console.WriteLine("\nFile Name Entered is blank, Please try again ");
-                    FileName = Console.ReadLine();
-                }
-                myConnection.ServerName = myConnection.ServerName + '/' + FileName;
-
-                Console.WriteLine($"\nPlease verify the download Source: {myConnection.ServerName}");
-                Console.WriteLine($"\n Y or y to accept and continue. ");
-                myAnswer = Console.ReadLine();
-                if (myAnswer == "Y" || myAnswer == "y") { LetsContinueLoop = false; }
-
-            } while (LetsContinueLoop);
-
-            return FileName;
-        } // end getFileName()
-
-        public string getDownLoadPath(string fileName)
-        {
-            bool LetsContinueLoop = true;
-            string myAnswer = "";
-            string DownLoadPath = "";
-
-            Console.WriteLine("\nPlease enter the Download Location: ");
-            Console.WriteLine("\nexample: c:\\download  location must exist");
-
-            do
-            {
-                DownLoadPath = Console.ReadLine();
-                while (DownLoadPath == "")
-                {
-                    Console.WriteLine("\nLocal File Path Entered is blank, Please try again ");
-                    DownLoadPath = Console.ReadLine();
-                }
-                DownLoadPath = DownLoadPath + '/' + fileName;
-
-                Console.WriteLine($"\nPlease Verify the Destination: {DownLoadPath}");
-                Console.WriteLine($"\n Y or y to accept and continue. ");
-                myAnswer = Console.ReadLine();
-                if (myAnswer == "Y" || myAnswer == "y") { LetsContinueLoop = false; }
-
-            } while (LetsContinueLoop);
-
-            return DownLoadPath;
-        } // end getLocalFilePath()
-
-        public FtpTestWrapper getWrapper()
-        {
-            return this.wrapper;
-        }
-
+        /*
+         * Function to make FTP wrapper to make request to the server
+         */
         public String create(FTPTestWrapperAbstract wrapper)
         {
             //Handle response
