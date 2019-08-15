@@ -7,7 +7,9 @@ using System.Text;
 namespace FtpClientApp
 {
     
-
+    /*
+     * Class for downloading multiple files from the server
+     */
     class FileDownloadMultiple
     {
         private ServerConnectionInformation connection;
@@ -113,6 +115,9 @@ namespace FtpClientApp
             }
         }
 
+        /*
+         * Class for getting input from the user on download path to use
+         */
         public string getDownloadPath()
         {
             string path = "";
@@ -170,6 +175,10 @@ namespace FtpClientApp
             }
             return path;
         }
+
+        /*
+         * Method to get input from the user on continuing
+         */
         public void PressAnyKeyToContinue()
         {
             Console.WriteLine("Press Any Key to Continue");

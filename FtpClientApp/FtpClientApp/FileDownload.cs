@@ -4,6 +4,9 @@ using System.Net;
 
 namespace FtpClientApp
 {
+    /*
+     * Class for downloading a file from the remote server
+     */
     public class FileDownload
     {
 
@@ -12,27 +15,33 @@ namespace FtpClientApp
 
         private FtpTestWrapper wrapper;
     
+        /*
+         * Constructor with a SCI to set
+         */
         public FileDownload(ServerConnectionInformation toUse)
         {
             this.connection = toUse;
         }
+
+        //sets the class' request to the given FtpWebRequest
         public void setRequest(FtpWebRequest req)
         {
             this.request = req;
         }
 
+        //sets class' ftp wrapper to the one given
         public void setWrapper(FtpTestWrapper wrapper)
         {
             this.wrapper = wrapper;
         }
+
+        //Method for downloading a file. Takes in a connection, a file name to get, and a directory to store the file in
         public String FileDownloadFromRemote(ServerConnectionInformation myConnection, string FileName, string DownloadDirectory)
-        {   //for test
-            //myConnection.ServerName = "ftp://speedtest.tele2.net";
-            //myConnection.UserName = "anonymous";
-            //myConnection.PassWord = "anonymous";
+        {   
 
+            String rememberServer = myConnection.ServerName;
             myConnection.ServerName = myConnection.ServerName + '/' + FileName;
-
+            
             int bytesRead = 0;
             byte[] buffer = new byte[2048];
             try{
@@ -56,12 +65,13 @@ namespace FtpClientApp
 
                     myFileStream.Write(buffer, 0, bytesRead);
                 }
-            
+                myConnection.ServerName = rememberServer;
                 myFileStream.Close();
                 StreamReader.Close();
                 return "success";
                 }
                 catch(WebException e){
+                    myConnection.ServerName = rememberServer;
                     if (e.Message.ToString().Equals("The remote server returned an error: (550) File unavailable (e.g., file not found, no access)."))
                     {
                         return "The server sent an error code of 550. The file may not exist.";
@@ -69,8 +79,14 @@ namespace FtpClientApp
                     return e.Message.ToString();
                 }
 
+            
+
         } // end FileDownload()
 
+
+        /*
+         * Function to make FTP wrapper to make request to the server
+         */
         public String create(FTPTestWrapperAbstract wrapper)
         {
             //Handle response

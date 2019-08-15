@@ -440,7 +440,7 @@ namespace FtpClient
                     break;
                 case "1":
                     //File download
-                    Console.WriteLine(" You choose 1, download File, in devl \n");
+                    Console.WriteLine(" You choose 1, download File\n");
 
                     Console.WriteLine("Please Enter the file to download:");
                     string f = Console.ReadLine();
@@ -450,7 +450,7 @@ namespace FtpClient
                         break;
                     }
 
-                    Console.WriteLine("Please Enter the Download Location: ");
+                    Console.WriteLine("Please Enter The Local Directory to Download the file to: ");
                     string l = Console.ReadLine();
                     if (String.IsNullOrEmpty(l))
                     {
