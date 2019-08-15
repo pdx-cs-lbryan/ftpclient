@@ -2,6 +2,9 @@
 using System.IO;
 namespace FtpClientApp
 {
+    /*
+     * Class for renaming a local file
+     */
     public class RenameLocal
     {
         /*

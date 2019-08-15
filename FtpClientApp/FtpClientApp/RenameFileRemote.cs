@@ -5,6 +5,9 @@ using System.Net;
 
 namespace FtpClientApp
 {
+    /*
+     * Class to rename file on the remote server via FTP
+     */
    public class RenameFileRemote
    {
        private ServerConnectionInformation connection;
@@ -13,20 +16,34 @@ namespace FtpClientApp
 
        private FtpTestWrapper wrapper;
 
+        /*
+         * Constructor with a SCI to set for the class
+         */
        public RenameFileRemote(ServerConnectionInformation toUse)
        {
            this.connection = toUse;
        }
+
+        /*
+         * Sets the class' request to the one passed in
+         */
        public void setRequest(FtpWebRequest req)
        {
            this.request = req;
        }
 
+        /*
+         * Sets the class' wrapper to the one passed in
+         */
        public void setWrapper(FtpTestWrapper wrapper)
        {
            this.wrapper = wrapper;
        }
 
+
+        /*
+         * Takes in a file and a new name to set its name to for the remote server
+         */
        public String RenameFileOnRemoteServer(String file, String newName)
         {
             String remoteFile = this.connection.ServerName + '/' + file;
@@ -50,11 +67,17 @@ namespace FtpClientApp
            
         }
 
+        /*
+         * Returns the class' wrapper
+         */
         public FtpTestWrapper getWrapper()
         {
             return this.wrapper;
         }
 
+        /*
+         * Makes the FTP request to the server via the wrapper
+         */
         public String create(FTPTestWrapperAbstract wrapper)
         {
             //Handle response

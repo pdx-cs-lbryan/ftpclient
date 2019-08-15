@@ -5,6 +5,9 @@ using System.Net;
 
 namespace FtpClientApp
 {
+    /*
+     * The DeleteFromRemote class is used to make FTP requests to a server to delete a file.
+     */
     public class DeleteFromRemote
     {
 
@@ -13,20 +16,33 @@ namespace FtpClientApp
 
         private FtpTestWrapper wrapper;
     
+        /*
+         * Constructor to set the class' connection to the one passed in
+         */
         public DeleteFromRemote(ServerConnectionInformation toUse)
         {
             this.connection = toUse;
         }
+
+        /*
+         * Class to set the class' request to the one passed in
+         */
         public void setRequest(FtpWebRequest req)
         {
             this.request = req;
         }
 
+        /*
+         * Class to set the class' FTP wrapper to the one passed in
+         */
         public void setWrapper(FtpTestWrapper wrapper)
         {
             this.wrapper = wrapper;
         }
 
+        /*
+         * Takes in a string to determine the file to delete and makes an FTP request to the server to delete that file.
+         */
         public String DeleteFileOnRemoteServer(String file)
         {
             String remoteFile = this.connection.ServerName + '/' + file;
@@ -49,11 +65,18 @@ namespace FtpClientApp
            
         }
 
+        /*
+         * Returns the class' FTP wrapper
+         */
         public FtpTestWrapper getWrapper()
         {
             return this.wrapper;
         }
 
+
+        /*
+         * Class to make a request to the server via the wrapper.
+         */
         public String create(FTPTestWrapperAbstract wrapper)
         {
             //Handle response

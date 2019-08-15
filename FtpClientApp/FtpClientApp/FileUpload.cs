@@ -22,11 +22,17 @@ namespace FtpClientApp
             this.connection = toUse;
         }
 
+        /*
+         * Sets the class' request to the one given
+         */
         public void setRequest(WebClient req)
         {
             this.request = req;
         }
 
+        /*
+         * Sets the class' FTP wrapper to the one given
+         */
         public void setWrapper(FtpTestWrapper wrapper)
         {
             this.wrapper = wrapper;
@@ -89,11 +95,17 @@ namespace FtpClientApp
             return "success";
         }
 
+        /*
+         * Returns the class' FTP wrapper
+         */
         public FtpTestWrapper getWrapper()
         {
             return this.wrapper;
         }
 
+        /*
+         * Function to make the FTP request to the server
+         */
         public String create(FTPTestWrapperAbstract wrapper)
         {
             try

@@ -6,6 +6,9 @@ using System.Net;
 
 namespace FtpClientApp
 {
+    /*
+     * Class for listing remote files
+     */
     public class ListFiles
     {
 
@@ -14,20 +17,33 @@ namespace FtpClientApp
 
         private FtpTestWrapper wrapper;
     
+        /*
+         * Constructor which sets the class' ServerconnectionInformation to the one passed in
+         */
         public ListFiles(ServerConnectionInformation toUse)
         {
             this.connection = toUse;
         }
+
+        /*
+         * Sets the class' request to the one passed in
+         */
         public void setRequest(FtpWebRequest req)
         {
             this.request = req;
         }
 
+        /*
+         * Sets the class' wrapper to the one passed in
+         */
         public void setWrapper(FtpTestWrapper wrapper)
         {
             this.wrapper = wrapper;
         }
 
+        /*
+         * Function to list files on remote server
+         */
         public String ListFilesOnRemoteServer()
         {
             try{
@@ -52,11 +68,17 @@ namespace FtpClientApp
            
         }
 
+        /*
+         * Returns the class' FTP wrapper
+         */
         public FtpTestWrapper getWrapper()
         {
             return this.wrapper;
         }
 
+        /*
+         * Uses the wrapper to make a request to the FTP server
+         */
         public String create(FTPTestWrapperAbstract wrapper)
         {
             //Handle response
