@@ -143,6 +143,9 @@ namespace FtpClientApp
             catch (System.UriFormatException e)
             {
                 return "Poorly formatted URI. Please enter a valid path.";
+            }catch (Exception e)
+            {
+                return "Error when trying to send request to host. The server may be offline.";
             }
         }
     }
