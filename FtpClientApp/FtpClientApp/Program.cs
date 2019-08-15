@@ -166,7 +166,7 @@ namespace FtpClient
             Console.WriteLine("9) Rename local file");
             Console.WriteLine("10) Copy Directory (files & subdirectory) to Remote Server");
             Console.WriteLine("11) Put multiple files on Remote Server");
-            Console.WriteLine("12) Get all files on Remote Server");
+            Console.WriteLine("12) Get mutliple files from Remote Server");
             Console.WriteLine("13) Save Connection Information");
             Console.WriteLine("14) Logout from Server \n");
 
