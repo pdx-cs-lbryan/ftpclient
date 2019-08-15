@@ -194,6 +194,8 @@ namespace FtpClientApp
             string dirPath = BaseDirectory();
             string path = GetPath();
 
+            try { 
+
             if (!Directory.Exists(dirPath))
             {
                 Directory.CreateDirectory(dirPath);
@@ -203,6 +205,11 @@ namespace FtpClientApp
             byte[] temp2 = Encrypt(UserName, k, v);
             byte[] temp3 = Encrypt(PassWord, k, v);
             File.WriteAllText(path, $"{Convert.ToBase64String(temp1)}\n{Convert.ToBase64String(temp2)}\n{Convert.ToBase64String(temp3)}");
+
+            } catch (Exception e)
+            {
+                Console.WriteLine("Could not store connection info: " + e.Message);
+            }
         }
 
         /*

@@ -9,27 +9,51 @@ namespace FtpClientApp
      */
     public class LogFiles
     {
-        public static string MyDateTime = DateTime.Now.ToString("yyyyMMddHHmm");
-        public static string LogBaseName = "FTPLog_" + MyDateTime + ".log";
-        public static string DefaultLogDir = Directory.GetCurrentDirectory();
-        public static string ftpLogName = DefaultLogDir + "/" + LogBaseName;
-        public static StreamWriter ftpLog = File.AppendText(ftpLogName);
+
+        public string MyDateTime;
+        public string LogBaseName;
+        public string DefaultLogDir;
+        public string ftpLogName;
+        public StreamWriter ftpLog;
+        private bool operate;
+
+        public LogFiles()
+        {
+            try
+            {
+                MyDateTime = DateTime.Now.ToString("yyyyMMddHHmm");
+                LogBaseName = "FTPLog_" + MyDateTime + ".log";
+                DefaultLogDir = Directory.GetCurrentDirectory();
+                ftpLogName = DefaultLogDir + "/" + LogBaseName;
+                         ftpLog = File.AppendText(ftpLogName);
+                operate = true;
+
+            } catch (Exception e)
+            {
+                operate = false;
+                Console.WriteLine("Could not start the log file: " + e.Message);
+            }
+
+        }
 
         /*
          * Starts up the log file
          */
         public void StartLog()
         {
-            try
+            if(operate == true)
             {
-                TextWriter w = ftpLog;
-                w.WriteLine("========================================================");
-                w.WriteLine("Begin Log " + DateTime.Now.ToString("yyyyMMdd-HH:mm:ss"));
-            } catch (Exception e)
-            {
-                Console.WriteLine("Error writing to log file: " + e.Message);
+                try
+                {
+                    TextWriter w = ftpLog;
+                    w.WriteLine("========================================================");
+                    w.WriteLine("Begin Log " + DateTime.Now.ToString("yyyyMMdd-HH:mm:ss"));
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Error writing to log file: " + e.Message);
+                }
             }
-            
 
         }
 
@@ -38,16 +62,20 @@ namespace FtpClientApp
          */
         public void WriteLog(string logMessage)
         {
-            try
+            if(operate == true)
             {
-                TextWriter w = ftpLog;
-                w.WriteLine(DateTime.Now.ToString("yyyyMMdd-HH:mm:ss") + " " + logMessage);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Error writing to log file: " + e.Message);
-            }
+                try
+                {
+                    TextWriter w = ftpLog;
+                    w.WriteLine(DateTime.Now.ToString("yyyyMMdd-HH:mm:ss") + " " + logMessage);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Error writing to log file: " + e.Message);
+                }
 
+            }
+           
         }
 
         /*
@@ -55,19 +83,22 @@ namespace FtpClientApp
          */
         public void EndLog()
         {
-            try
+            if(operate == true)
             {
-                TextWriter w = ftpLog;
-                w.WriteLine("End Log " + DateTime.Now.ToString("yyyyMMdd-HH:mm:ss"));
-                w.WriteLine("========================================================");
+                try
+                {
+                    TextWriter w = ftpLog;
+                    w.WriteLine("End Log " + DateTime.Now.ToString("yyyyMMdd-HH:mm:ss"));
+                    w.WriteLine("========================================================");
 
-                w.Close();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Error writing to log file: " + e.Message);
-            }
+                    w.Close();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Error writing to log file: " + e.Message);
+                }
 
+            }  
         }
 
     }

@@ -89,7 +89,7 @@ Double click the file to begin the installation.
 
 8. The installation files will be located in your default location for 32 bit applications (likely Program Files (x86)). Look for:
 
-'FtpClientApp.exe' to run the program.
+'FtpClientApp.exe' to run the program. Run the program as an administrator.
 
 9. To uninstall, go to "Apps and Features" in the Windows' settings and uninstall "Team 7 FTP Client"
 
