@@ -1,5 +1,13 @@
 # FTP Client
 
+Team Members:<br>
+Marcella Billett: mbillett<br>
+Saraswathi Datar: saraswathidatar<br>
+Colin Gregory: c-gregory<br>
+Bryan Logan: pdx-cs-lbryan<br>
+Dennis Mesanovic: dmesa2<br>
+
+
 Recreation of CS410/510 Agile Summer 2019 Group 7 FTP Repository.<br>
 **Please visit this link for the original repository and its commit history**: https://github.com/mbillett/ftpClient<br>
 **See our trello board here**: https://trello.com/b/Ev8rTDfC/agileftp
